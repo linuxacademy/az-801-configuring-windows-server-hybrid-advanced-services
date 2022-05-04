@@ -1,0 +1,27 @@
+# Web Deploy Tool #
+
+https://www.iis.net/downloads/microsoft/web-deploy 
+
+# Create simple HTML website #
+
+echo '<!doctype html><html><body><h1>Hello Cloud Gurus!</h1></body></html>' > C:\inetpub\wwwroot\index.html
+
+# Check website dependencies #
+
+msdeploy -verb:getDependencies -source:metakey=lm/w3svc/1
+
+# Backup website #
+
+%windir%\system32\inetsrv\appcmd add backup "PreWebDeploy"
+
+# Package website into .zip file #
+
+msdeploy -verb:sync  -source:metakey=lm/w3svc/1 -dest:package=c:\Site1.zip > WebDeployPackage.log
+
+# Check target dependencies with what-if #
+
+msdeploy -verb:sync -source:package=c:\Site1.zip -dest:metakey=lm/w3svc/1 -whatif > WebDeploySync.log
+
+# Extract website package #
+
+msdeploy -verb:sync -source:package=c:\Site1.zip -dest:metakey=lm/w3svc/1 > WebDeploySync.log
