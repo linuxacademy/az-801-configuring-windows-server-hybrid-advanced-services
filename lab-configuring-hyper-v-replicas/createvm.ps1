@@ -1,5 +1,5 @@
- #Create Virtual Switch
- New-VMSwitch -Name "External VM Switch" -AllowManagementOS $True -NetAdapterName "Ethernet"
+#Create Virtual Switch
+New-VMSwitch -Name "External VM Switch" -AllowManagementOS $True -NetAdapterName "Ethernet"
 
 # Set VM Name, Switch Name, and Installation Media Path.
 $VMName =  "hyperv$env:computername" 
