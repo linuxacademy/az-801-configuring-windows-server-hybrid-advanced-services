@@ -5,7 +5,7 @@ New-VMSwitch -Name "External VM Switch" -AllowManagementOS $True -NetAdapterName
 $VMName =  "hyperv$env:computername" 
 $Switch = (Get-VMSwitch).Name
 
-# Create New Virtual Machine
+# Create New Hyper-V Virtual Machine
 New-VM -Name $VMName -SwitchName $Switch `
     -MemoryStartupBytes 2GB `
     -Generation 2 `
