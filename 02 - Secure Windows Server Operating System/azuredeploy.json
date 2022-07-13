@@ -244,20 +244,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/BrentenDovey-ACG/TestARMTemplates/main/test.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/install-adds.ps1"
           ],
-          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File test.ps1",
-          "properties": {
-              "adminCreds": {
-                  "userName": "[parameters('adminUsername')]",
-                  "userPassword": "PrivateSettingsRef:adminPassword"
-              }
-          }
-        },
-        "protectedSettings": {
-            "Items": {
-                "adminPassword": "[parameters('adminPassword')]"
-            }
+          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File install-adds.ps1"
         }
       }
     },
