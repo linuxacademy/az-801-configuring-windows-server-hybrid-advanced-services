@@ -10,4 +10,4 @@ $WarningPreference = "SilentlyContinue"
 Install-WindowsFeature "AD-Domain-Services" -IncludeManagementTools | Out-Null
 #$pw = ConvertTo-SecureString "$addsPassword" -AsPlainText -Force
 $addsPassword = ConvertTo-SecureString "$addsPassword" -AsPlainText -Force
-Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force -NoRebootOnCompletion
+Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $addsPassword -DomainNetBIOSName 'CORP' -InstallDns -Force -NoRebootOnCompletion
