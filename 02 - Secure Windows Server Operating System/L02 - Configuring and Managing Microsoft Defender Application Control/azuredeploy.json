@@ -13,6 +13,13 @@
       "metadata": {
         "description": "Password for local admin and domain admin"
       }
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The base URI for the artifacts"
+      },
+      "defaultValue": "[deployment().properties.templateLink.uri]"
     }
   },
   "functions": [],
@@ -244,9 +251,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/L02%20-%20Configuring%20and%20Managing%20Microsoft%20Defender%20Application%20Control/installadds.ps1"
+            "[uri(parameters('_artifactsLocation'), concat('installadds.ps1'))]"
           ],
-          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1"
+          "commandToExecute": "concat['powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -password ', parameters('adminPassword')]"
         }
       }
     },
