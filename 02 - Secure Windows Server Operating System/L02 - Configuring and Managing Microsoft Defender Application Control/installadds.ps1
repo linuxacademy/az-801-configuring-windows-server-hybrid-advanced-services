@@ -2,11 +2,12 @@
 
 param
 (
-      [string]$addsPassword,
+      [String]$addsPassword,
 )
 
 $ProgressPreference = "SilentlyContinue"
 $WarningPreference = "SilentlyContinue"
 Install-WindowsFeature "AD-Domain-Services" -IncludeManagementTools | Out-Null
-$pw = ConvertTo-SecureString "$addsPassword" -AsPlainText -Force
+#$pw = ConvertTo-SecureString "$addsPassword" -AsPlainText -Force
+$addsPassword = ConvertTo-SecureString "$addsPassword" -AsPlainText -Force
 Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force -NoRebootOnCompletion
