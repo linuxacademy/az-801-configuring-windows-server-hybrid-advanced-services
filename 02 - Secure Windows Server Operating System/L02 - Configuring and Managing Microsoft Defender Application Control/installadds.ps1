@@ -2,7 +2,7 @@
 
 param
 (
-      [String]$addsPassword,
+      [String]$addsPassword
 )
 
 $ProgressPreference = "SilentlyContinue"
