@@ -253,7 +253,7 @@
           "fileUris": [
             "[uri(parameters('_artifactsLocation'), concat('installadds.ps1'))]"
           ],
-          "commandToExecute": "concat['powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -password ', parameters('adminPassword')]"
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -password ', parameters('adminPassword'))]"
         }
       }
     },
