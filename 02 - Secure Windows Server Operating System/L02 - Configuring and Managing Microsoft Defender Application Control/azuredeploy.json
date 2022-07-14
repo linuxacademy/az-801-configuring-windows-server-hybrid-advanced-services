@@ -19,11 +19,19 @@
       "metadata": {
         "description": "The base URI for the artifacts"
       },
-      "defaultValue": "[deployment().properties.templateLink.uri]"
+      "defaultValue": "[deployment().properties.templatelink.uri]"
+    },
+    "_artifactsLocationSasToken": {
+      "type": "string",
+      "metadata": {
+        "description": "The SAS token for the artifacts"
+      },
+      "defaultValue": ""
     }
   },
   "functions": [],
   "variables": {
+    "scriptFileUri": "[uri(parameters('_artifactsLocation'), '/installadds.ps1')]",
     "location": "[resourceGroup().location]",
     "storageName": "[toLower(concat('storage', uniqueString(resourceGroup().id)))]"
   },
@@ -251,9 +259,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[uri(parameters('_artifactsLocation'), concat('installadds.ps1'))]"
+            "[variables('scriptFileUri')]"
           ],
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -password ', parameters('adminPassword'))]"
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -addsPassword ', parameters('adminPassword'))]"
         }
       }
     },
