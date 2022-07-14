@@ -1,0 +1,360 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the local Admin and domain admin"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for local admin and domain admin"
+      }
+    }
+  },
+  "functions": [],
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "storageName": "[toLower(concat('storage', uniqueString(resourceGroup().id)))]"
+  },
+  "resources": [
+    {
+      "name": "[variables('storageName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2021-04-01",
+      "location": "[variables('location')]",
+      "tags": {},
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "Storage"
+    },
+    {
+      "name": "dc-PublicIP",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2020-11-01",
+      "location": "[variables('location')]",
+      "tags": {},
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "name": "1awesome-nsg",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2020-11-01",
+      "location": "[variables('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "nsgRule1",
+            "properties": {
+              "description": "description",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "1awesome-VirtualNetwork",
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2020-11-01",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/networkSecurityGroups', '1awesome-nsg')]"
+      ],
+      "tags": {},
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": ["10.0.0.0/16"]
+        },
+        "subnets": [
+          {
+            "name": "1awesome-VirtualNetwork-Subnet",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24",
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', '1awesome-nsg')]"
+              }
+            }
+          },
+          {
+            "name": "AzureBastionSubnet",
+            "properties": {
+              "addressPrefix": "10.0.1.0/26",
+              "delegations": [],
+              "privateEndpointNetworkPolicies": "Enabled",
+              "privateLinkServiceNetworkPolicies": "Enabled"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/bastionHosts",
+      "apiVersion": "2020-11-01",
+      "name": "1awesome-VirtualNetwork-Bastion",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'bastion-PublicIP')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+      ],
+      "properties": {
+        "dnsName": "bst-90498298-d97d-4a30-a10e-ad5126ba24cd.bastion.azure.com",
+        "ipConfigurations": [
+          {
+            "name": "IpConf",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'bastion-PublicIP')]"
+              },
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', '1awesome-VirtualNetwork', 'AzureBastionSubnet')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2020-11-01",
+      "name": "bastion-PublicIP",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "name": "dc-NetworkInterface",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2020-11-01",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'dc-PublicIP')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+      ],
+      "tags": {},
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipConfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "10.0.0.4",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'dc-PublicIP')]"
+              },
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', '1awesome-VirtualNetwork', '1awesome-VirtualNetwork-Subnet')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "dc",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2021-03-01",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces', 'dc-NetworkInterface')]"
+      ],
+      "tags": {},
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_D2S_v3"
+        },
+        "osProfile": {
+          "computerName": "dc",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2022-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "dcOSDisk",
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'dc-NetworkInterface')]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName'))).primaryEndpoints.blob]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat('dc','/', 'vmBGInfo')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-03-01",
+      "location": "[variables('location')]",
+      "tags": {},
+      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'dc')]"],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "BGInfo",
+        "typeHandlerVersion": "2.1",
+        "autoUpgradeMinorVersion": true,
+        "settings": {},
+        "protectedSettings": null
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-04-01",
+      "name": "[concat('dc','/', 'SetupADDS')]",
+      "location": "[variables('location')]",
+      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'dc')]"],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.7",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/lab-configuring-hyper-v-replicas/installadds.ps1"
+          ],
+          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1"
+        }
+      }
+    },
+    {
+      "name": "vm-PublicIP",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2020-11-01",
+      "location": "[variables('location')]",
+      "tags": {},
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+
+    {
+      "name": "vm-NetworkInterface",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2020-11-01",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'vm-PublicIP')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+      ],
+      "tags": {},
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipConfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "10.0.0.5",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'vm-PublicIP')]"
+              },
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', '1awesome-VirtualNetwork', '1awesome-VirtualNetwork-Subnet')]"
+              }
+            }
+          }
+        ],
+        "dnsSettings": {
+          "dnsServers": ["10.0.0.4"]
+        }
+      }
+    },
+    {
+      "name": "vm",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2021-03-01",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces', 'vm-NetworkInterface')]"
+      ],
+      "tags": {},
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_D2S_v3"
+        },
+        "osProfile": {
+          "computerName": "vm",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2022-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "vmOSDisk",
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'vm-NetworkInterface')]"
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true,
+            "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName'))).primaryEndpoints.blob]"
+          }
+        }
+      }
+    },
+    {
+      "name": "[concat('vm','/', 'vmBGInfo')]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-03-01",
+      "location": "[variables('location')]",
+      "tags": {},
+      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'vm')]"],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "BGInfo",
+        "typeHandlerVersion": "2.1",
+        "autoUpgradeMinorVersion": true,
+        "settings": {},
+        "protectedSettings": null
+      }
+    }
+  ],
+  "outputs": {}
+}
