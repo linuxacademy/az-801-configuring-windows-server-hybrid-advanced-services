@@ -1,4 +1,6 @@
-# Navigate to where the “AzureADPasswordProtectionProxySetup.exe” was downloaded to
+#Install Proxy on Domain Joined Machine
+
+#Navigate to where the “AzureADPasswordProtectionProxySetup.exe” was downloaded to
 
 Set-Location <File Location>
 

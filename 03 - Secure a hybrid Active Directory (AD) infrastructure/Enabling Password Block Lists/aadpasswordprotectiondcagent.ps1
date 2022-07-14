@@ -1,4 +1,6 @@
-# Navigate to where the “AzureADPasswordProtectionDCAgentSetup.msi” was downloaded to
+#Install DC Agent on Domain Controller
+
+#Navigate to where the “AzureADPasswordProtectionDCAgentSetup.msi” was downloaded to
 
 Set-Location <File Location>
 
