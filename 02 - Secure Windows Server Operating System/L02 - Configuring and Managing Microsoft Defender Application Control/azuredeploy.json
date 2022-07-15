@@ -238,7 +238,7 @@
           "fileUris": [
             "[concat(variables('_artifactsLocation'), '/installadds.ps1')]"
           ],
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -addsPassword ', parameters('adminPassword'), ' -domainName ', variables('domain'))]"
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -adminUser ', parameters('adminUsername'), ' -addsPassword ', parameters('adminPassword'), ' -domainName ', variables('domain'))]"
         }
       }
     },
