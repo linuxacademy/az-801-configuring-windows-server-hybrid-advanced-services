@@ -43,6 +43,9 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2019-10-01",
       "name": "bastionTemplate",
+      "dependsOn": [
+        "networkTemplate"
+      ],
       "properties": {
         "templateLink": {
           "uri": "[variables('templateTwo')]"
