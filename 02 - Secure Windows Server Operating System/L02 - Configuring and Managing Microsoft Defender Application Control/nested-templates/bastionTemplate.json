@@ -13,8 +13,7 @@
       "name": "1awesome-VirtualNetwork-Bastion",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', 'bastion-PublicIP')]",
-        "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'bastion-PublicIP')]"
       ],
       "properties": {
         "ipConfigurations": [
