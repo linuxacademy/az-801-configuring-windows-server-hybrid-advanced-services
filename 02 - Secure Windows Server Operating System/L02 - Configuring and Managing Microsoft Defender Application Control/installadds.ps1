@@ -11,7 +11,7 @@ Install-WindowsFeature "AD-Domain-Services" -IncludeManagementTools | Out-Null
 $pw = ConvertTo-SecureString "$addsPassword" -AsPlainText -Force
 #Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force -NoRebootOnCompletion
 Install-ADDSForest `
--SafeModeAdministratorPassword $pw
+-SafeModeAdministratorPassword $pw `
 -CreateDnsDelegation:$false `
 -DatabasePath "C:\Windows\NTDS" `
 -DomainMode "WinThreshold" `
