@@ -6,15 +6,13 @@
       "type": "string",
       "metadata": {
         "description": "Username for the local Admin and domain admin"
-      },
-        "defaultValue": "azureuser"
+      }
     },
     "adminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "Password for local admin and domain admin"
-      },
-        "defaultValue": "P@s5w0rD12!"
+      }
     }
   },
   "functions": [],
