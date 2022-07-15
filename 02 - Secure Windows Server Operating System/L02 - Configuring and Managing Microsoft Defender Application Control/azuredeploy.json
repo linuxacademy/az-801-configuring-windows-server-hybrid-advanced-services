@@ -17,9 +17,10 @@
   },
   "functions": [],
   "variables": {
-    "_artifactsLocation": "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/L02%20-%20Configuring%20and%20Managing%20Microsoft%20Defender%20Application%20Control/installadds.ps1",
+    "_artifactsLocation": "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/L02%20-%20Configuring%20and%20Managing%20Microsoft%20Defender%20Application%20Control",
     "location": "[resourceGroup().location]",
-    "storageName": "[toLower(concat('storage', uniqueString(resourceGroup().id)))]"
+    "storageName": "[toLower(concat('storage', uniqueString(resourceGroup().id)))]",
+    "domain": "coolcloudgurus.com"
   },
   "resources": [
     {
@@ -245,9 +246,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[variables('_artifactsLocation')]"
+            "[concat(variables('_artifactsLocation'), '/installadds.ps1')]"
           ],
-          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -addsPassword ', parameters('adminPassword'))]"
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File installadds.ps1', ' -addsPassword ', parameters('adminPassword'), ' -domainName ', variables('domain'))]"
         }
       }
     },
@@ -337,6 +338,28 @@
             "enabled": true,
             "storageUri": "[reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageName'))).primaryEndpoints.blob]"
           }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2021-04-01",
+      "name": "[concat('dc','/', 'SetupADDS')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'vm')]",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc/SetupADDS')]"
+        ],
+      "properties": {
+        "publisher": "Microsoft.Compute",
+        "type": "CustomScriptExtension",
+        "typeHandlerVersion": "1.7",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[concat(variables('_artifactsLocation'), '/domainjoin.ps1')]"
+          ],
+          "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File domainjoin.ps1', ' -addsPassword ', parameters('adminPassword'), ' -addsUser ', parameters('adminUsername'), ' -domainName ', variables('domain'))]"
         }
       }
     },

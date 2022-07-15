@@ -2,9 +2,14 @@
 
 param
 (
-      [String]$addsPassword
+    [String]$addsPassword,
+    [String]$domainName
 )
 
+# Create Net BIOS name for the domain by splitting the domain name by dots and upper case it
+$domainNetBIOSName = $domainName.split(".")[0]
+# Upper case domain NetBIOS name
+$domainNetBIOSName = $domainNetBIOSName.toUpper()
 $ProgressPreference = "SilentlyContinue"
 $WarningPreference = "SilentlyContinue"
 Install-WindowsFeature "AD-Domain-Services" -IncludeManagementTools | Out-Null
@@ -15,11 +20,11 @@ Install-ADDSForest `
 -CreateDnsDelegation:$false `
 -DatabasePath "C:\Windows\NTDS" `
 -DomainMode "WinThreshold" `
--DomainName "coolcloudgurus.com" `
--DomainNetbiosName "COOLCLOUDGURUS" `
+-DomainName $domainName `
+-DomainNetbiosName $domainNetBIOSName `
 -ForestMode "WinThreshold" `
 -InstallDns:$true `
 -LogPath "C:\Windows\NTDS" `
--NoRebootOnCompletion:$true `
+-NoRebootOnCompletion:$false `
 -SysvolPath "C:\Windows\SYSVOL" `
 -Force:$true
