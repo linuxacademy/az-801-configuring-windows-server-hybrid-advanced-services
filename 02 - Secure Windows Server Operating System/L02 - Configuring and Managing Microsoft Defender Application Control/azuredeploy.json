@@ -218,29 +218,12 @@
       }
     },
     {
-      "name": "[concat('dc','/', 'vmBGInfo')]",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2021-03-01",
-      "location": "[variables('location')]",
-      "tags": {},
-      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'dc')]"],
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "BGInfo",
-        "typeHandlerVersion": "2.1",
-        "autoUpgradeMinorVersion": true,
-        "settings": {},
-        "protectedSettings": null
-      }
-    },
-    {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2021-04-01",
       "name": "[concat('dc','/', 'SetupADDS')]",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', 'dc')]",
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc/vmBGInfo')]"
+        "[resourceId('Microsoft.Compute/virtualMachines', 'dc')]"
         ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -352,7 +335,8 @@
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines', 'vm')]",
         "[resourceId('Microsoft.Compute/virtualMachines', 'dc')]",
-        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc/SetupADDS')]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc', 'SetupADDS')]",
+        "[resourceId('Microsoft.Network/bastionHosts', '1awesome-VirtualNetwork-Bastion')]"
         ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -365,22 +349,6 @@
           ],
           "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -File domainjoin.ps1', ' -addsPassword ', parameters('adminPassword'), ' -addsUser ', parameters('adminUsername'), ' -domainName ', variables('domain'))]"
         }
-      }
-    },
-    {
-      "name": "[concat('vm','/', 'vmBGInfo')]",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2021-03-01",
-      "location": "[variables('location')]",
-      "tags": {},
-      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'vm')]"],
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "BGInfo",
-        "typeHandlerVersion": "2.1",
-        "autoUpgradeMinorVersion": true,
-        "settings": {},
-        "protectedSettings": null
       }
     }
   ],
