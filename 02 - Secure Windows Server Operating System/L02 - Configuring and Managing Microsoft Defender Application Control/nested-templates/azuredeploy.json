@@ -37,7 +37,13 @@
           "uri": "[variables('templateOne')]"
         },
         "mode": "Incremental",
-        "parameters": {}
+        "parameters": {},
+        "outputs": {
+            "vnetId": {
+                "type": "string",
+                "value": "[reference('networkTemplate').properties.outputs.vnetName.id]"
+            }
+        }
       }
     },
     {
@@ -67,7 +73,14 @@
           "uri": "[variables('templateThree')]"
         },
         "mode": "Incremental",
-        "parameters": {}
+        "parameters": {
+            "adminUsername": {
+                "value": "[parameters('adminUsername')]"
+            },
+            "adminPassword": {
+                "value": "[parameters('adminPassword')]"
+            }
+        }
       }
     }
   ],

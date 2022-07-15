@@ -67,5 +67,10 @@
       }
     }
   ],
-  "outputs": {}
+  "outputs": {
+      "virtualNetworkId": {
+          "type": "string",
+          "value": "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+      }
+  }
 }
