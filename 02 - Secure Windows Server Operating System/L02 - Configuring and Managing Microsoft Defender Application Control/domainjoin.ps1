@@ -11,4 +11,4 @@ $joinCred = New-Object pscredential -ArgumentList ([pscustomobject]@{
     UserName = "CORP\$addsUser"
     Password = (ConvertTo-SecureString -String $addsPassword -AsPlainText -Force)[0]
 })
-Add-Computer -Domain $domainName -Credential $joinCred
+Add-Computer -Domain $domainName -Credential $joinCred -Restart -Force

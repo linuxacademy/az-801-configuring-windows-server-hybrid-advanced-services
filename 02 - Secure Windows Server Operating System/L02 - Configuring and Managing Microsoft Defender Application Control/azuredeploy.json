@@ -110,7 +110,8 @@
       "location": "[variables('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', 'bastion-PublicIP')]",
-        "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+        "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]",
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc', 'SetupADDS')]"
       ],
       "properties": {
         "dnsName": "bst-90498298-d97d-4a30-a10e-ad5126ba24cd.bastion.azure.com",
