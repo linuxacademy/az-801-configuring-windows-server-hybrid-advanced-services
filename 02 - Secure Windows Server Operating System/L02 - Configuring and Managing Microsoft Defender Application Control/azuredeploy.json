@@ -344,7 +344,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2021-04-01",
-      "name": "[concat('dc','/', 'SetupADDS')]",
+      "name": "[concat('dc','/', 'DomainJoin')]",
       "location": "[variables('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines', 'vm')]",
