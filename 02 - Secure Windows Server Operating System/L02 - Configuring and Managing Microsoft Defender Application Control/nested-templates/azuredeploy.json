@@ -24,7 +24,8 @@
     "storageName": "[toLower(concat('storage', uniqueString(resourceGroup().id)))]",
     "domain": "coolcloudgurus.com",
     "templateOne": "[concat(variables('_artifactsLocation'), '/networkTemplate.json')]",
-    "templateTwo": "[concat(variables('_artifactsLocation'), '/bastionTemplate.json')]"
+    "templateTwo": "[concat(variables('_artifactsLocation'), '/bastionTemplate.json')]",
+    "templateThree": "[concat(variables('_artifactsLocation'), '/dcVMTemplate.json')]"
   },
   "resources": [
     {
@@ -49,6 +50,21 @@
       "properties": {
         "templateLink": {
           "uri": "[variables('templateTwo')]"
+        },
+        "mode": "Incremental",
+        "parameters": {}
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "dcVMTemplate",
+      "dependsOn": [
+        "bastionTemplate"
+      ],
+      "properties": {
+          "templateLink": {
+          "uri": "[variables('templateThree')]"
         },
         "mode": "Incremental",
         "parameters": {}
