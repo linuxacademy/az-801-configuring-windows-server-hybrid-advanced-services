@@ -37,13 +37,7 @@
           "uri": "[variables('templateOne')]"
         },
         "mode": "Incremental",
-        "parameters": {},
-        "outputs": {
-            "vnetId": {
-                "type": "string",
-                "value": "[reference('networkTemplate').properties.outputs.vnetName.id]"
-            }
-        }
+        "parameters": {}
       }
     },
     {
