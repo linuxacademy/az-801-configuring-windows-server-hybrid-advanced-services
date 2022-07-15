@@ -348,6 +348,7 @@
       "location": "[variables('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines', 'vm')]",
+        "[resourceId('Microsoft.Compute/virtualMachines', 'dc')]",
         "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc/SetupADDS')]"
         ],
       "properties": {
