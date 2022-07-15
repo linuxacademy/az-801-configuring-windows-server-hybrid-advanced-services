@@ -4,11 +4,14 @@
   "parameters": {},
   "functions": [],
   "variables": {
+    "vnetName": "1awesome-VirtualNetwork",
+    "subnetName": "1awesome-VirtualNetwork-Subnet",
+    "nsgName": "1awesome-nsg",
     "location": "[resourceGroup().location]"
   },
   "resources": [
     {
-      "name": "1awesome-nsg",
+      "name": "[variables('nsgName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2020-11-01",
       "location": "[variables('location')]",
@@ -32,12 +35,12 @@
       }
     },
     {
-      "name": "1awesome-VirtualNetwork",
+      "name": "[variables('vnetName')]",
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2020-11-01",
       "location": "[variables('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkSecurityGroups', '1awesome-nsg')]"
+        "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
       ],
       "tags": {},
       "properties": {
@@ -46,21 +49,12 @@
         },
         "subnets": [
           {
-            "name": "1awesome-VirtualNetwork-Subnet",
+            "name": "[variables('subnetName')]",
             "properties": {
               "addressPrefix": "10.0.0.0/24",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', '1awesome-nsg')]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
               }
-            }
-          },
-          {
-            "name": "AzureBastionSubnet",
-            "properties": {
-              "addressPrefix": "10.0.1.0/26",
-              "delegations": [],
-              "privateEndpointNetworkPolicies": "Enabled",
-              "privateLinkServiceNetworkPolicies": "Enabled"
             }
           }
         ]
@@ -70,7 +64,7 @@
   "outputs": {
       "virtualNetworkId": {
           "type": "string",
-          "value": "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+          "value": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
       }
   }
 }
