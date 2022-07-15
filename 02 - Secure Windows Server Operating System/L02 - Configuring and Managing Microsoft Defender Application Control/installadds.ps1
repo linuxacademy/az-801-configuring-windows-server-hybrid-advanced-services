@@ -17,8 +17,9 @@ Install-WindowsFeature "AD-Domain-Services" -IncludeManagementTools | Out-Null
 $pw = ConvertTo-SecureString "$addsPassword" -AsPlainText -Force
 
 # Download powershell script from github to the downloads folder
-$webClient = New-Object System.Net.WebClient
-$webClient.DownloadFile("https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/create-domainObjects.ps1", "C:\Users\$adminUser\Downloads\create-domainObjects.ps1")
+# $webClient = New-Object System.Net.WebClient
+# $webClient.DownloadFile('https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/create-domainObjects.ps1', 'C:\Users\$adminUser\Downloads\create-domainObjects.ps1')
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/create-domainObjects.ps1' -OutFile 'C:\Users\cloudchase\Downloads\createDomainObjects.ps1'
 
 #Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force -NoRebootOnCompletion
 Install-ADDSForest `
