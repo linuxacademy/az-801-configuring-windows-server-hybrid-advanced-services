@@ -136,6 +136,9 @@
       "apiVersion": "2020-11-01",
       "name": "bastion-PublicIP",
       "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', 'dc', 'SetupADDS')]"
+      ],
       "sku": {
         "name": "Standard"
       },
