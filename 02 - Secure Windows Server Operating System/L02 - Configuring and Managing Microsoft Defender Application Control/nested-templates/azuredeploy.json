@@ -6,21 +6,25 @@
       "type": "string",
       "metadata": {
         "description": "Username for the local Admin and domain admin"
-      }
+      },
+        "defaultValue": "azureuser"
     },
     "adminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "Password for local admin and domain admin"
-      }
+      },
+        "defaultValue": "P@s5w0rD12!"
     }
   },
   "functions": [],
   "variables": {
-    "_artifactsLocation": "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/L02%20-%20Configuring%20and%20Managing%20Microsoft%20Defender%20Application%20Control",
+    "_artifactsLocation": "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/L02%20-%20Configuring%20and%20Managing%20Microsoft%20Defender%20Application%20Control/nested-templates",
     "location": "[resourceGroup().location]",
     "storageName": "[toLower(concat('storage', uniqueString(resourceGroup().id)))]",
-    "domain": "coolcloudgurus.com"
+    "domain": "coolcloudgurus.com",
+    "templateOne": "[concat(variables('_artifactsLocation'), '/networkTemplate.json')]",
+    "templateTwo": "[concat(variables('_artifactsLocation'), '/bastionTemplate.json')]"
   },
   "resources": [
     {
@@ -28,8 +32,22 @@
       "apiVersion": "2019-10-01",
       "name": "networkTemplate",
       "properties": {
+        "templateLink": {
+          "uri": "[variables('templateOne')]"
+        },
         "mode": "Incremental",
-        "uri": "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/L02%20-%20Configuring%20and%20Managing%20Microsoft%20Defender%20Application%20Control/networkTemplate.json",
+        "parameters": {}
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2019-10-01",
+      "name": "bastionTemplate",
+      "properties": {
+        "templateLink": {
+          "uri": "[variables('templateTwo')]"
+        },
+        "mode": "Incremental",
         "parameters": {}
       }
     }
