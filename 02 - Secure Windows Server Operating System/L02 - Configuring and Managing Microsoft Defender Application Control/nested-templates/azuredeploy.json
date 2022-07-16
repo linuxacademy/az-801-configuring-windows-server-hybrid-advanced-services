@@ -3,13 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {},
   "functions": [],
-  "variables": {
-    "location": "[resourceGroup().location]",
-    "vnetName": "1awesome-VirtualNetwork",
-    "subnetName": "1awesome-VirtualNetwork-Subnet",
-    "nsgName": "1awesome-nsg",
-    "bastionName": "1awesome-bastion"
-  },
+  "variables": {},
   "resources": [
     {
       "name": "networkDeployment",
@@ -22,10 +16,10 @@
         "mode": "Incremental",
         "parameters": {},
         "variables": {
-          "location": "[variables('location')]",
-          "vnetName": "[variables('vnetName')]",
-          "subnetName": "[variables('subnetName')]",
-          "nsgName": "[variables('nsgName')]"
+          "location": "[resourceGroup().location]",
+          "vnetName": "1awesome-VirtualNetwork",
+          "subnetName": "1awesome-VirtualNetwork-Subnet",
+          "nsgName": "1awesome-nsg"
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -109,8 +103,8 @@
         "mode": "Incremental",
         "parameters": {},
         "variables": {
-          "bastionName": "[variables('bastionName')]",
-          "location": "[variables('location')]"
+          "location": "[resourceGroup().location]",
+          "bastionName": "1awesome-bastion"
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -127,9 +121,9 @@
     }
   ],
   "outputs": {
-      "vnetId": {
-              "type": "string",
-              "value": "[reference('networkDeployment').outputs.vnetId.value]"
-            }
+    "vnetId": {
+      "type": "string",
+      "value": "[reference('networkDeployment').outputs.vnetId.value]"
+    }
   }
 }
