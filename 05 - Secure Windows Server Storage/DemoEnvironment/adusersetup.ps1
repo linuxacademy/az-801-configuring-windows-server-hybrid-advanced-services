@@ -1,4 +1,4 @@
-pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
+$pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
 
 #Create domain admin
 New-ADUser -Name "awesomeadmin" -Description "lab domain admin" -Enabled $true -AccountPassword $pw
