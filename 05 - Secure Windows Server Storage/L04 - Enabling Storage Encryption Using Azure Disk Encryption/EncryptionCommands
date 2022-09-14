@@ -1,0 +1,11 @@
+az vm encryption show --name "dc" -g ""
+
+az keyvault create --name "" --resource-group "" --location  --enabled-for-disk-encryption
+
+az vm encryption enable -g "" --name "dc" --disk-encryption-keyvault ""
+
+az vm encryption show --name "dc" -g 
+
+$KeyVault = Get-AzKeyVault -VaultName "" -ResourceGroupName ""
+
+Set-AzVMDiskEncryptionExtension -ResourceGroupName "" -VMName "vm" -DiskEncryptionKeyVaultUrl $KeyVault.VaultUri -DiskEncryptionKeyVaultId $KeyVault.ResourceId
