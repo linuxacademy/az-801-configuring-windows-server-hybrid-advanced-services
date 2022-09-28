@@ -13,6 +13,6 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-co
 $Trigger= New-ScheduledTaskTrigger -AtStartup # Specify the trigger settings
 $User= "NT AUTHORITY\SYSTEM" # Specify the account to run the script
 $Action= New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "C:\PS\adusersetup.ps1" # Specify what program to run and with its parameters
-Register-ScheduledTask -TaskName "create ad account" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest –Force # Specify the name of the task
+Register-ScheduledTask -TaskName "create ad account" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest -Force # Specify the name of the task
 
 Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force
