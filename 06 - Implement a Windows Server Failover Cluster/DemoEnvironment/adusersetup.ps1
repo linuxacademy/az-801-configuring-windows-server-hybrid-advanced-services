@@ -1,4 +1,4 @@
-start-sleep -s 60 # Giving the DC time to start
+start-sleep -s 120 # Giving the DC time to start
 
 $pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
 
