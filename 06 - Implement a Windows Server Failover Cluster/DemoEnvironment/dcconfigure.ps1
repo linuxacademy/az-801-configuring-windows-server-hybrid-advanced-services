@@ -10,9 +10,9 @@ $pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
 mkdir "C:\PS"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/06%20-%20Implement%20a%20Windows%20Server%20Failover%20Cluster/DemoEnvironment/adusersetup.ps1" -OutFile "C:\PS\adusersetup.ps1"
 
-$Trigger= New-ScheduledTaskTrigger -AtStartup # Specify the trigger settings
-$User= "NT AUTHORITY\SYSTEM" # Specify the account to run the script
-$Action= New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "C:\PS\adusersetup.ps1" # Specify what program to run and with its parameters
-Register-ScheduledTask -TaskName "create ad account" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest -Force # Specify the name of the task
+$Trigger= New-ScheduledTaskTrigger -AtStartup -RandomDelay (New-TimeSpan -Seconds 90)
+$User= "NT AUTHORITY\SYSTEM"
+$Action= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\PS\adusersetup.ps1"
+Register-ScheduledTask -TaskName "create ad account" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest -Force
 
 Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force
