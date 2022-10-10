@@ -1,10 +1,15 @@
-start-sleep -s 120 # Giving the DC time to start
+start-sleep -s 30 # Giving the DC time to start
 
+$username = "awesomeadmin"
 $pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
 
 #Create domain admin
-New-ADUser -Name "awesomeadmin" -Description "lab domain admin" -Enabled $true -AccountPassword $pw
-Add-ADGroupMember -Identity "Domain Admins" -Members awesomeadmin
+do
+{
+    New-ADUser -Name "awesomeadmin" -Description "lab domain admin" -Enabled $true -AccountPassword $pw
+    Add-ADGroupMember -Identity "Domain Admins" -Members awesomeadmin
+    Start-Sleep -Seconds 10
+} while ($username -eq "" -or (Get-ADUser -Filter {Name -eq $username}) -eq $null)
 
 #Create "Sales" group and add sales user
 New-ADGroup -Name "Sales" -SamAccountName Sales `
