@@ -1,0 +1,1 @@
+Install-WindowsFeature -computername "server2" -Name Failover-Clustering -IncludeManagementTools
