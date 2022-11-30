@@ -1,5 +1,3 @@
-start-sleep -s 30 # Giving the DC time to start
-
 $username = "awesomeadmin"
 $pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
 
