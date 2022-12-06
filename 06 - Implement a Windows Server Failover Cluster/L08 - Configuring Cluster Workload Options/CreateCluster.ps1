@@ -30,7 +30,7 @@ Start-ClusterGroup FS01
 # Moving the cluster role to server 1 (if its not already) so we can create the file shares 
 Move-ClusterGroup -Name FS01 -Node server1
 
-# Create a file share on the mapped drive. Make sure to do this on the server where the role is currently hosted
-$Path = G:\PSCreatedShare\
+# Create a file share on the mapped drive. Double check the drive letter of the path below. Make sure to do this on the server where the role is currently hosted
+$Path = "F:\PSCreatedShare\"
 New-Item -Path $Path -ItemType Directory
 New-SmbShare -Name PSCreatedShare -Path $Path -FullAccess CORP\awesomeadmin
