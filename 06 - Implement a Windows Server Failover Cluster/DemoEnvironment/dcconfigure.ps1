@@ -20,6 +20,8 @@ $Task.Triggers.Repetition.Interval = 'PT1M'
 $Task.Triggers.Repetition.Duration = 'PT10M'
 $Task | Set-ScheduledTask
 
+Invoke-WebRequest -Uri "https://webapp-wdac-wizard.azurewebsites.net/packages/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" -OutFile "$env:USERPROFILE/Downloads/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX"
+
 function Disable-IEESC {
 
 $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
@@ -37,5 +39,7 @@ Write-Host "IE Enhanced Security Configuration (ESC) has been disabled." -Foregr
 }
 
 Disable-IEESC
+
+Add-AppxPackage -Path "C:\Users\azureuser\Downloads\WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX"
 
 Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force
