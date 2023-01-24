@@ -18,8 +18,6 @@ New-ADGroup -Name "Sales" -SamAccountName Sales `
 New-ADUser -Name "awesomesales" -Description "sales team member" -Enabled $true -AccountPassword $pw
 Add-ADGroupMember -Identity "Sales" -Members awesomesales
 
-Invoke-WebRequest -Uri "https://webapp-wdac-wizard.azurewebsites.net/packages/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" -OutFile "$env:USERPROFILE/Downloads/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX"
-
 function Disable-IEESC {
 
 $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
