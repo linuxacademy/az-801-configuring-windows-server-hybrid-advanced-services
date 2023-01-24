@@ -245,7 +245,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/06%20-%20Implement%20a%20Windows%20Server%20Failover%20Cluster/DemoEnvironment/dcconfigure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/dcconfigure.ps1"
           ],
           "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File dcconfigure.ps1"
         }
@@ -401,7 +401,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/06%20-%20Implement%20a%20Windows%20Server%20Failover%20Cluster/DemoEnvironment/vmconfigure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/adusersetup.ps1"
           ],
           "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File vmconfigure.ps1"
         }
@@ -557,7 +557,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/06%20-%20Implement%20a%20Windows%20Server%20Failover%20Cluster/DemoEnvironment/vmconfigure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/adusersetup.ps1"
           ],
           "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File vmconfigure.ps1"
         }
