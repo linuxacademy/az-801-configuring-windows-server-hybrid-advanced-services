@@ -11,17 +11,23 @@ mkdir "C:\PS"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/adusersetup.ps1" -OutFile "C:\PS\adusersetup.ps1"
 
 # Set trigger at startup
-$Trigger= New-ScheduledTaskTrigger -AtStartup
+$startUpTrigger= New-ScheduledTaskTrigger -AtStartup
 # Set user as system for scheduled task action
-$User= "NT AUTHORITY\SYSTEM"
+$sysUser= "NT AUTHORITY\SYSTEM"
 # Set action to be executed at startup by user
-$Action= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\PS\adusersetup.ps1"
-Register-ScheduledTask -TaskName "create ad account" -Trigger $Trigger -User $User -Action $Action -RunLevel Highest -Force
+$startUpAction= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\PS\adusersetup.ps1"
+Register-ScheduledTask -TaskName "create ad account" -Trigger $startUpTrigger -User $sysUser -Action $startUpAction -RunLevel Highest -Force
 
-$Task = Get-ScheduledTask -TaskName 'create ad account'
-$Task.Triggers.Repetition.Interval = 'PT1M'
-$Task.Triggers.Repetition.Duration = 'PT10M'
-$Task | Set-ScheduledTask
+$startUpTask = Get-ScheduledTask -TaskName 'create ad account'
+$startUpTask.Triggers.Repetition.Interval = 'PT1M'
+$startUpTask.Triggers.Repetition.Duration = 'PT10M'
+$startUpTask | Set-ScheduledTask
+
+# # Set trigger at user login
+# $userLoginTrigger= New-ScheduledTaskTrigger -AtLogOn
+# # Set user as local admin user for scheduled task action on login event
+# $localUser= ""
+# Invoke-WebRequest -Uri "https://webapp-wdac-wizard.azurewebsites.net/packages/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" -OutFile "C:/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX"
 
 # Install ADDS
 Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force

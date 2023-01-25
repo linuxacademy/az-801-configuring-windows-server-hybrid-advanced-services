@@ -40,6 +40,6 @@ Disable-IEESC
 # Set user home variable
 # $userHome = "$env:USERPROFILE"
 # Download WDAC installer to downloads folder and install it
-Invoke-WebRequest -Uri "https://webapp-wdac-wizard.azurewebsites.net/packages/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" -OutFile "C:/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" >> "C:/WDAC-Web-Request-Log.txt"
-start-sleep -s 30 # Giving the installer time to download
-Add-AppxPackage -Path "C:/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" >> "C:/WDAC-Installer-Log.txt
+# Invoke-WebRequest -Uri "https://webapp-wdac-wizard.azurewebsites.net/packages/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" -OutFile "C:/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" >> "C:/WDAC-Web-Request-Log.txt"
+# start-sleep -s 30 # Giving the installer time to download
+# Add-AppxPackage -Path "C:/WDACWizard_2.1.0.1_x64_8wekyb3d8bbwe.MSIX" >> "C:/WDAC-Installer-Log.txt
