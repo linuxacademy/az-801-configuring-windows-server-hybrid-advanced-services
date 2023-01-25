@@ -9,7 +9,7 @@ $pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
 
 mkdir "C:\PS"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/adusersetup.ps1" -OutFile "C:\PS\adusersetup.ps1"
-Invoke-WebRequst -Uri "" -OutFile "C:\PS\installWDAC.ps1" 
+Invoke-WebRequst -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/installWDAC.ps1" -OutFile "C:\PS\installWDAC.ps1" 
 # Set trigger at startup
 $startUpTrigger= New-ScheduledTaskTrigger -AtStartup
 # Set user as system for scheduled task action
