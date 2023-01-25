@@ -28,7 +28,7 @@ $startUpTask | Set-ScheduledTask
 $userLoginTrigger= New-ScheduledTaskTrigger -AtStartup
 # Set user as local admin user for scheduled task action on login event
 $username        = $Args[0]
-$localUser= "CORP\$username"
+$localUser= "CORP\azureuser"
 # Set action to be executed at login of $localUser
 $userLoginAction= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\PS\installWDAC.ps1"
 Register-ScheduledTask -TaskName "install wdac" -Trigger $userLoginTrigger -User $localUser -Action $userLoginAction -RunLevel Highest -Force
