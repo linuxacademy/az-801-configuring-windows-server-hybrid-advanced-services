@@ -247,7 +247,7 @@
           "fileUris": [
             "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/dcconfigure.ps1"
           ],
-          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File dcconfigure.ps1"
+          "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', 'installWDAC.ps1', ' ', parameters('adminUsername'))]"
         }
       }
     },
