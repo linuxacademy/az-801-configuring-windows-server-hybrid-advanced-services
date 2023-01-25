@@ -25,7 +25,7 @@ $startUpTask.Triggers.Repetition.Duration = 'PT10M'
 $startUpTask | Set-ScheduledTask
 
 # Set trigger at user login
-$userLoginTrigger= New-ScheduledTaskTrigger -AtLogOn
+$userLoginTrigger= New-ScheduledTaskTrigger -AtStartup
 # Set user as local admin user for scheduled task action on login event
 $username        = $Args[0]
 $localUser= "CORP\$username"
