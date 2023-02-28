@@ -244,7 +244,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/clintbonnett-acg/az-801-testing/main/L03/Demo%20Environment/dcconfigure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/16%20-%20Migrate%20an%20Active%20Directory%20Domain%20Services%20Infrastructure%20/L03%20-%20Migrating%20to%20a%20New%20AD%20Forest/Demo%20Environment/dcconfigure.ps1"
           ],
           "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File dcconfigure.ps1"
         }
@@ -506,7 +506,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/clintbonnett-acg/az-801-testing/main/L03/Demo%20Environment/dc2configure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/16%20-%20Migrate%20an%20Active%20Directory%20Domain%20Services%20Infrastructure%20/L03%20-%20Migrating%20to%20a%20New%20AD%20Forest/Demo%20Environment/dc2configure.ps1"
           ],
           "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File dc2configure.ps1"
         }
