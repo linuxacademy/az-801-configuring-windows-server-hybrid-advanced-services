@@ -8,7 +8,7 @@ Install-WindowsFeature "AD-Domain-Services" -IncludeManagementTools | Out-Null
 $pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
 
 mkdir "C:\PS"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/clintbonnett-acg/az-801-testing/main/adusersetup.ps1" -OutFile "C:\PS\adusersetup.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/16%20-%20Migrate%20an%20Active%20Directory%20Domain%20Services%20Infrastructure%20/L02%20-%20Migrating%20AD%20DS%20Objects%20Using%20ADMT/Demo%20Environment/adusersetup.ps1" -OutFile "C:\PS\adusersetup.ps1"
 
 $Trigger= New-ScheduledTaskTrigger -AtStartup
 $User= "NT AUTHORITY\SYSTEM"
