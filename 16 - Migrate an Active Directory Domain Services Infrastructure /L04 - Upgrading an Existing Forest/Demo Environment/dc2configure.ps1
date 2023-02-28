@@ -7,7 +7,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies
 Install-WindowsFeature "AD-Domain-Services" -IncludeManagementTools | Out-Null
 
 mkdir "C:\PS"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/clintbonnett-acg/az-801-testing/main/L04/Demo%20Environment/adusersetupnewdomain.ps1" -OutFile "C:\PS\adusersetupnewdomain.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/16%20-%20Migrate%20an%20Active%20Directory%20Domain%20Services%20Infrastructure%20/L04%20-%20Upgrading%20an%20Existing%20Forest/Demo%20Environment/adusersetupnewdomain.ps1" -OutFile "C:\PS\adusersetupnewdomain.ps1"
 
 $Trigger= New-ScheduledTaskTrigger -AtStartup
 $User= "NT AUTHORITY\SYSTEM"
