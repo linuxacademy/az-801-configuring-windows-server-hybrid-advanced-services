@@ -23,7 +23,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-co
 # Set trigger at startup
 $startUpTrigger= New-ScheduledTaskTrigger -AtStartup
 # Set user as system for scheduled task action
-$sysUser= "NT AUTHORITY\SYSTEM"
+$sysUser= "CORP\azureuser"
 # Set action to be executed at startup as $sysUser
 $startUpAction= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\PS\srcServerSetup.ps1"
 Register-ScheduledTask -TaskName "install wac" -Trigger $startUpTrigger -User $sysUser -Action $startUpAction -RunLevel Highest -Force
