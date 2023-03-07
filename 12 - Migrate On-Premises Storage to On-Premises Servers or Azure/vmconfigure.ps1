@@ -22,12 +22,11 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-co
 
 # Set trigger at startup
 $Trigger= New-ScheduledTaskTrigger -AtStartup
-# Set user as local admin user for scheduled task action on login event
+# Set user as local admin user for scheduled task action on startup
 $localUser= "CORP\azureuser"
-# Set action to be executed at login of $localUser
+# Set action to be executed at startup
 $Action= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "C:\PS\srcServerSetup.ps1"
 Register-ScheduledTask -TaskName "install wac" -Trigger $Trigger -User $localUser -Action $Action
-
 $Task = Get-ScheduledTask -TaskName 'install wac'
 $Task | Set-ScheduledTask
 
