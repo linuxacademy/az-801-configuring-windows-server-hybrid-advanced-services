@@ -252,17 +252,13 @@
       }
     },
 
-
-
-
     {
       "name": "server1-PublicIP",
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
       "location": "[variables('location')]",
       "tags": {},
-      "sku": 
-      {
+      "sku": {
         "name": "Standard"
       },
       "properties": {
@@ -341,20 +337,20 @@
             "createOption": "FromImage"
           },
           "dataDisks": [
-          {
+            {
               "lun": 0,
               "name": "clusterdisk1",
               "createOption": "Attach",
               "caching": "None",
               "writeAcceleratorEnabled": false,
               "managedDisk": {
-                  "storageAccountType": "StandardSSD_LRS",
-                  "id": "[resourceId('Microsoft.Compute/disks', 'clusterdisk1')]"
+                "storageAccountType": "StandardSSD_LRS",
+                "id": "[resourceId('Microsoft.Compute/disks', 'clusterdisk1')]"
               },
               "deleteOption": "Detach",
               "diskSizeGB": 8,
               "toBeDetached": false
-          }
+            }
           ]
         },
         "networkProfile": {
@@ -378,7 +374,9 @@
       "apiVersion": "2021-03-01",
       "location": "[variables('location')]",
       "tags": {},
-      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'server1')]"],
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'server1')]"
+      ],
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "BGInfo",
@@ -393,7 +391,9 @@
       "apiVersion": "2021-04-01",
       "name": "[concat('server1','/', 'Config')]",
       "location": "[variables('location')]",
-      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'server1')]"],
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'server1')]"
+      ],
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "CustomScriptExtension",
@@ -408,17 +408,13 @@
       }
     },
 
-
-
-
     {
       "name": "server2-PublicIP",
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
       "location": "[variables('location')]",
       "tags": {},
-      "sku": 
-      {
+      "sku": {
         "name": "Standard"
       },
       "properties": {
@@ -497,20 +493,20 @@
             "createOption": "FromImage"
           },
           "dataDisks": [
-          {
+            {
               "lun": 0,
               "name": "clusterdisk1",
               "createOption": "Attach",
               "caching": "None",
               "writeAcceleratorEnabled": false,
               "managedDisk": {
-                  "storageAccountType": "StandardSSD_LRS",
-                  "id": "[resourceId('Microsoft.Compute/disks', 'clusterdisk1')]"
+                "storageAccountType": "StandardSSD_LRS",
+                "id": "[resourceId('Microsoft.Compute/disks', 'clusterdisk1')]"
               },
               "deleteOption": "Detach",
               "diskSizeGB": 8,
               "toBeDetached": false
-          }
+            }
           ]
         },
         "networkProfile": {
@@ -534,7 +530,9 @@
       "apiVersion": "2021-03-01",
       "location": "[variables('location')]",
       "tags": {},
-      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'server2')]"],
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'server2')]"
+      ],
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "BGInfo",
@@ -549,7 +547,9 @@
       "apiVersion": "2021-04-01",
       "name": "[concat('server2','/', 'Config')]",
       "location": "[variables('location')]",
-      "dependsOn": ["[resourceId('Microsoft.Compute/virtualMachines', 'server2')]"],
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', 'server2')]"
+      ],
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "CustomScriptExtension",
@@ -564,131 +564,126 @@
       }
     },
 
-
-
-
-        {
-            "apiVersion": "2022-03-02",
-            "type": "Microsoft.Compute/disks",
-            "name": "clusterdisk1",
-            "location": "[variables('location')]",
-            "properties": {
-                "creationData": {
-                    "createOption": "empty"
-                },
-                "diskSizeGB": 8,
-                "maxShares": 2,
-                "encryption": {
-                    "type": "EncryptionAtRestWithPlatformKey"
-                },
-                "dataAccessAuthMode": "None",
-                "networkAccessPolicy": "AllowAll",
-                "publicNetworkAccess": "Enabled"
-            },
-            "sku": {
-                "name": "StandardSSD_LRS"
-            },
-            "tags": {}
+    {
+      "apiVersion": "2022-03-02",
+      "type": "Microsoft.Compute/disks",
+      "name": "clusterdisk1",
+      "location": "[variables('location')]",
+      "properties": {
+        "creationData": {
+          "createOption": "empty"
         },
+        "diskSizeGB": 8,
+        "maxShares": 2,
+        "encryption": {
+          "type": "EncryptionAtRestWithPlatformKey"
+        },
+        "dataAccessAuthMode": "None",
+        "networkAccessPolicy": "AllowAll",
+        "publicNetworkAccess": "Enabled"
+      },
+      "sku": {
+        "name": "StandardSSD_LRS"
+      },
+      "tags": {}
+    },
 
-
-
-
-      {
-            "apiVersion": "2021-05-01",
-            "name": "[variables('ilbName')]",
-            "type": "Microsoft.Network/loadBalancers",
-            "location": "[variables('location')]",
-            "dependsOn": ["[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"],
-            "tags": {},
+    {
+      "apiVersion": "2021-05-01",
+      "name": "[variables('ilbName')]",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+      ],
+      "tags": {},
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "frontend",
             "properties": {
-                "frontendIPConfigurations": [
-                    {
-                        "name": "frontend",
-                        "properties": {
-                            "privateIPAddress": "10.0.0.150",
-                            "privateIPAddressVersion": "IPv4",
-                            "privateIPAllocationMethod": "Static",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', '1awesome-VirtualNetwork', '1awesome-VirtualNetwork-Subnet')]"
-                            }
-                        }
-                    }
-                ],
-                "backendAddressPools": [
-                    {
-                        "name": "backend",
-                        "properties": {
-                            "loadBalancerBackendAddresses": [
-                                {
-                                    "name": "server1",
-                                    "properties": {
-                                        "virtualNetwork": {
-                                            "id": "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
-                                        },
-                                        "ipAddress": "10.0.0.5"
-                                    }
-                                },
-                                {
-                                    "name": "server2",
-                                    "properties": {
-                                        "virtualNetwork": {
-                                            "id": "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
-                                        },
-                                        "ipAddress": "10.0.0.6"
-                                    }
-                                }
-                            ]
-                         }           
-                    }
-                ],
-                "probes": [
-                    {
-                        "name": "59999probe",
-                        "properties": {
-                            "protocol": "Tcp",
-                            "port": 59999,
-                            "requestPath": null,
-                            "intervalInSeconds": 10,
-                            "numberOfProbes": 1
-                        }
-                    }
-                ],
-                "loadBalancingRules": [
-                    {
-                        "name": "Port445",
-                        "properties": {
-                            "frontendIPConfiguration": {
-                                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', variables('ilbName'), 'frontend')]"
-                            },
-                            "frontendPort": 445,
-                            "backendPort": 445,
-                            "enableFloatingIP": true,
-                            "idleTimeoutInMinutes": 4,
-                            "protocol": "TCP",
-                            "loadDistribution": "Default",
-                            "probe": {
-                                "id": "[resourceId('Microsoft.Network/loadBalancers/probes', variables('ilbName'), '59999probe')]"
-                            },
-                            "disableOutboundSnat": true,
-                            "enableTcpReset": false,
-                            "backendAddressPools": [
-                                {
-                                    "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('ilbName'), 'backend')]"
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "inboundNatRules": [],
-                "outboundRules": []
-            },
-            "sku": {
-                "name": "Standard",
-                "tier": "Regional"
+              "privateIPAddress": "10.0.0.150",
+              "privateIPAddressVersion": "IPv4",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', '1awesome-VirtualNetwork', '1awesome-VirtualNetwork-Subnet')]"
+              }
             }
-        }
-
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "backend",
+            "properties": {
+              "loadBalancerBackendAddresses": [
+                {
+                  "name": "server1",
+                  "properties": {
+                    "virtualNetwork": {
+                      "id": "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+                    },
+                    "ipAddress": "10.0.0.5"
+                  }
+                },
+                {
+                  "name": "server2",
+                  "properties": {
+                    "virtualNetwork": {
+                      "id": "[resourceId('Microsoft.Network/virtualNetworks', '1awesome-VirtualNetwork')]"
+                    },
+                    "ipAddress": "10.0.0.6"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "59999probe",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 59999,
+              "requestPath": null,
+              "intervalInSeconds": 10,
+              "numberOfProbes": 1
+            }
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "Port445",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', variables('ilbName'), 'frontend')]"
+              },
+              "frontendPort": 445,
+              "backendPort": 445,
+              "enableFloatingIP": true,
+              "idleTimeoutInMinutes": 4,
+              "protocol": "TCP",
+              "loadDistribution": "Default",
+              "probe": {
+                "id": "[resourceId('Microsoft.Network/loadBalancers/probes', variables('ilbName'), '59999probe')]"
+              },
+              "disableOutboundSnat": true,
+              "enableTcpReset": false,
+              "backendAddressPools": [
+                {
+                  "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('ilbName'), 'backend')]"
+                }
+              ]
+            }
+          }
+        ],
+        "inboundNatRules": [],
+        "outboundRules": []
+      },
+      "sku": {
+        "name": "Standard",
+        "tier": "Regional"
+      }
+    }
   ],
   "outputs": {}
 }
