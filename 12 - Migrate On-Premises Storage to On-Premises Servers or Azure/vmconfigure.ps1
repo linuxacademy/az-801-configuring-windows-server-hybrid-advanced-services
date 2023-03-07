@@ -20,6 +20,16 @@ mkdir "C:\PS"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/srcServerSetup.ps1" -OutFile "C:\PS\srcServerSetup.ps1"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/initDataDisk.ps1" -OutFile "C:\PS\initDataDisk.ps1"
 
+# Set trigger at startup
+$Trigger= New-ScheduledTaskTrigger -AtStartup
+# Set user as local admin user for scheduled task action on login event
+$localUser= "CORP\azureuser"
+# Set action to be executed at login of $localUser
+$Action= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "C:\PS\srcServerSetup.ps1"
+Register-ScheduledTask -TaskName "install wac" -Trigger $Trigger -User $localUser -Action $Action
+
+$Task = Get-ScheduledTask -TaskName 'install wac'
+$Task | Set-ScheduledTask
 
 Do {
 
