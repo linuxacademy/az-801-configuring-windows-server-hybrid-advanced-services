@@ -31,7 +31,8 @@ Do {
 
 } While ( $Error.Count -eq 1 )
 
-# Invoke-WebRequest -Uri "<insert_ghrawlink>" -OutFile "C:\PS\<insert_filename>.ps1"
+mkdir "C:\PS"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/srcServerSetup.ps1" -OutFile "C:\PS\srcServerSetup.ps1"
 
 
 shutdown.exe /r /t 20
