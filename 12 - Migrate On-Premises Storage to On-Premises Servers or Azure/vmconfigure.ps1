@@ -16,6 +16,10 @@ New-NetFirewallRule -DisplayName "AzureILBProbe" -Direction Inbound -LocalPort 5
 Enable-PSRemoting -Force
 winrm set winrm/config/service/auth '@{Kerberos="true"}'
 
+mkdir "C:\PS"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/srcServerSetup.ps1" -OutFile "C:\PS\srcServerSetup.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/initDataDisk.ps1" -OutFile "C:\PS\initDataDisk.ps1"
+
 
 Do {
 
@@ -30,10 +34,6 @@ Do {
     }
 
 } While ( $Error.Count -eq 1 )
-
-mkdir "C:\PS"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/srcServerSetup.ps1" -OutFile "C:\PS\srcServerSetup.ps1"
-
 
 shutdown.exe /r /t 20
 exit
