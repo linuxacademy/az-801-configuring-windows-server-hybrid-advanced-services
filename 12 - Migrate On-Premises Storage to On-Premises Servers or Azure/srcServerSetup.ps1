@@ -25,7 +25,7 @@ for ($i = 1; $i -le $numFiles; $i++) {
 
 # Define variables
 $url = "https://go.microsoft.com/fwlink/?linkid=2220149&clcid=0x409&culture=en-us&country=us"
-$installerPath = "$env:TEMP\WindowsAdminCenterInstaller.msi"
+$installerPath = "C:\TEMP\WindowsAdminCenterInstaller.msi"
 $port = 44320
 $arguments = "/i `"$installerPath`" /qn /L*v log.txt SME_PORT=$port SSL_CERTIFICATE_OPTION=generate"
 
