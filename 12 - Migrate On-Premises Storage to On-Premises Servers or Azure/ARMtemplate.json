@@ -245,7 +245,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/dcconfigure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/dcconfigure.ps1"
           ],
           "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', 'dcconfigure.ps1', ' ', parameters('adminUsername'))]"
         }
@@ -401,7 +401,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/vmconfigure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/vmconfigure.ps1"
           ],
           "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File vmconfigure.ps1"
         }
@@ -557,7 +557,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/02%20-%20Secure%20Windows%20Server%20Operating%20System/DemoEnvironment/vmconfigure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/vmconfigure.ps1"
           ],
           "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File vmconfigure.ps1"
         }
