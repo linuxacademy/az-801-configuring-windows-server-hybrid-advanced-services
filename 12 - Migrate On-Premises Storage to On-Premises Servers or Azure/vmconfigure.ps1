@@ -27,9 +27,9 @@ $startUpTrigger= New-ScheduledTaskTrigger -AtStartup
 $sysUser= "NT AUTHORITY\SYSTEM"
 # Set action to be executed at startup as $sysUser
 $startUpAction= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\PS\srcServerSetup.ps1"
-Register-ScheduledTask -TaskName "install wac" -Trigger $startUpTrigger -User $sysUser -Action $startUpAction -RunLevel Highest -Force
+Register-ScheduledTask -TaskName "setup share" -Trigger $startUpTrigger -User $sysUser -Action $startUpAction -RunLevel Highest -Force
 
-$startUpTask = Get-ScheduledTask -TaskName 'install wac'
+$startUpTask = Get-ScheduledTask -TaskName 'setup share'
 $startUpTask | Set-ScheduledTask
 
 Do {
