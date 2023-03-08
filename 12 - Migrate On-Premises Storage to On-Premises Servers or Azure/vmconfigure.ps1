@@ -21,17 +21,6 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-co
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/initDataDisk.ps1" -OutFile "C:\PS\initDataDisk.ps1"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/WACSetup.ps1" -OutFile "C:\PS\WACSetup.ps1"
 
-# # Set trigger at startup
-# $startUpTrigger= New-ScheduledTaskTrigger -AtStartup
-# # Set user as system for scheduled task action
-# $sysUser= "NT AUTHORITY\SYSTEM"
-# # Set action to be executed at startup as $sysUser
-# $startUpAction= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\PS\srcServerSetup.ps1"
-# Register-ScheduledTask -TaskName "install wac" -Trigger $startUpTrigger -User $sysUser -Action $startUpAction -RunLevel Highest -Force
-
-# $startUpTask = Get-ScheduledTask -TaskName 'install wac'
-# $startUpTask | Set-ScheduledTask
-
 Do {
 
     Try {    
