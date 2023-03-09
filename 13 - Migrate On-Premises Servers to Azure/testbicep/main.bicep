@@ -1,10 +1,10 @@
-param location string = 'westus'
+param location string = resourceGroup().location
 param vmUserName string
 @secure()
 param vmPassword string
 
-var customImageDefinitionName = 'Win2022_Eval_VHD'
-var customImageResourceId = resourceId('07089ab1-6f34-49b2-9cad-f1a654494a69', 'LACustomImagesRG', 'Microsoft.Compute/galleries/images/versions', 'LAImagesGallery', customImageDefinitionName, 'latest')
+// var customImageDefinitionName = 'Win2022_Eval_VHD'
+// var customImageResourceId = resourceId('07089ab1-6f34-49b2-9cad-f1a654494a69', 'LACustomImagesRG', 'Microsoft.Compute/galleries/images/versions', 'LAImagesGallery', customImageDefinitionName, 'latest')
 
 resource vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
   name: 'vnet-az801'
@@ -99,7 +99,10 @@ resource vm_az801 'Microsoft.Compute/virtualMachines@2020-12-01' = {
     }
     storageProfile: {
       imageReference: {
-        id: customImageResourceId
+        publisher: 'MicrosoftWindowsServer'
+        offer: 'WindowsServer'
+        sku: '2022-Datacenter'
+        version: 'latest'
       }
       osDisk: {
         name: 'vm-az801-OSDisk'
