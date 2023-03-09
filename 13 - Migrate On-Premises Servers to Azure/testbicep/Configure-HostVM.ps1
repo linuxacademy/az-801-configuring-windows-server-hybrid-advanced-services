@@ -18,7 +18,7 @@ New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
 Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
 
 # Create VMs
-$VMs = @('BRAVM1')
+$VMs = @('nestedVM1')
 foreach ($VM in $VMs) {
     #Set Scheduled Tasks to create the VM after restart
     $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Create-VM.ps1 -UserName $($UserName) -Password $($Password) -VM $($VM)"

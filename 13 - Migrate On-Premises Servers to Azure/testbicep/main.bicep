@@ -1,11 +1,8 @@
-param location string = resourceGroup().location
-param vmUserName string = 'azureuser'
+param location string = 'westus'
+param vmUserName string
 @secure()
 param vmPassword string
 
-// var uniqueString = substring('@LINUX_ACADEMY_UNIQUE_ID', 0, 10)
-// var vmPassword = concat(toUpper(uniqueString), uniqueString)
-// var vmPassword = 'Pa55w0rd'
 var customImageDefinitionName = 'Win2022_Eval_VHD'
 var customImageResourceId = resourceId('07089ab1-6f34-49b2-9cad-f1a654494a69', 'LACustomImagesRG', 'Microsoft.Compute/galleries/images/versions', 'LAImagesGallery', customImageDefinitionName, 'latest')
 
