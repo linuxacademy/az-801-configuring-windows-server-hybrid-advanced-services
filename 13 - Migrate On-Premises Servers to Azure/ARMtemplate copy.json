@@ -269,7 +269,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/vmconfigure.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/vmconfigure%20copy.ps1"
           ],
           "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File vmconfigure.ps1"
         }
@@ -401,28 +401,6 @@
         "protectedSettings": null
       }
     },
-    {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2021-04-01",
-      "name": "[concat('server2','/', 'Config')]",
-      "location": "[variables('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', 'server2')]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Compute",
-        "type": "CustomScriptExtension",
-        "typeHandlerVersion": "1.7",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/vmconfigure.ps1"
-          ],
-          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File vmconfigure.ps1"
-        }
-      }
-    },
-
     {
       "apiVersion": "2022-03-02",
       "type": "Microsoft.Compute/disks",
