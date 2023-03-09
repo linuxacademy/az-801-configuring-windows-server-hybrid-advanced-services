@@ -8,7 +8,7 @@ Install-WindowsFeature "AD-Domain-Services" -IncludeManagementTools | Out-Null
 $pw = ConvertTo-SecureString "p@55w0rd" -AsPlainText -Force
 
 mkdir "C:\PS"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/adusersetup.ps1" -OutFile "C:\PS\adusersetup.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/adusersetup.ps1" -OutFile "C:\PS\adusersetup.ps1"
 
 # Set trigger at startup
 $startUpTrigger= New-ScheduledTaskTrigger -AtStartup
@@ -22,20 +22,6 @@ $startUpTask = Get-ScheduledTask -TaskName 'create ad account'
 $startUpTask.Triggers.Repetition.Interval = 'PT1M'
 $startUpTask.Triggers.Repetition.Duration = 'PT10M'
 $startUpTask | Set-ScheduledTask
-
-# # Set trigger at user login
-# $userLoginTrigger= New-ScheduledTaskTrigger -AtStartup
-# # Set user as local admin user for scheduled task action on login event
-# $username        = $Args[0]
-# $localUser= "CORP\azureuser"
-# # Set action to be executed at login of $localUser
-# $userLoginAction= New-ScheduledTaskAction -Execute "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "C:\PS\installWDAC.ps1"
-# Register-ScheduledTask -TaskName "install wdac" -Trigger $userLoginTrigger -User $localUser -Action $userLoginAction
-
-# $userLoginTask = Get-ScheduledTask -TaskName 'install wdac'
-# $userLoginTask.Triggers.Repetition.Interval = 'PT1M'
-# $userLoginTask.Triggers.Repetition.Duration = 'PT10M'
-# $userLoginTask | Set-ScheduledTask
 
 # Install ADDS
 Install-ADDSForest -DomainName "corp.awesome.com" -SafeModeAdministratorPassword $pw -DomainNetBIOSName 'CORP' -InstallDns -Force

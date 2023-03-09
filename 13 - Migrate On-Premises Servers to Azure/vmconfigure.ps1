@@ -18,9 +18,7 @@ winrm set winrm/config/service/auth '@{Kerberos="true"}'
 
 mkdir "C:\PS"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/srcServerSetup.ps1" -OutFile "C:\PS\srcServerSetup.ps1"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/initDataDisk.ps1" -OutFile "C:\PS\initDataDisk.ps1"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/WACSetup.ps1" -OutFile "C:\PS\WACSetup.ps1"
-Invoke-WebRequest -Uri "https://www.microsoft.com/en-us/download/confirmation.aspx?id=57159" -OutFile "$env:TEMP\StorageSyncAgent_WS2022.msi"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/setupHyperVHost.ps1" -OutFile "C:\PS\setupHyperVHost.ps1"
 
 # Set trigger at startup
 $startUpTrigger= New-ScheduledTaskTrigger -AtStartup
