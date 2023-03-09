@@ -17,7 +17,7 @@ Enable-PSRemoting -Force
 winrm set winrm/config/service/auth '@{Kerberos="true"}'
 
 mkdir "C:\PS"
-Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/12%20-%20Migrate%20On-Premises%20Storage%20to%20On-Premises%20Servers%20or%20Azure/srcServerSetup.ps1" -OutFile "C:\PS\srcServerSetup.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/srcServerSetup.ps1" -OutFile "C:\PS\srcServerSetup.ps1"
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/setupHyperVHost.ps1" -OutFile "C:\PS\setupHyperVHost.ps1"
 
 # Set trigger at startup
