@@ -269,9 +269,9 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/vmconfigure%20copy.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/vmCustomScript.ps1"
           ],
-          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File vmconfigure.ps1"
+          "commandToExecute": "powershell.exe -ExecutionPolicy Unrestricted -File vmCustomScript.ps1"
         }
       }
     },
@@ -326,8 +326,7 @@
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
         "[resourceId('Microsoft.Network/networkInterfaces', 'server2-NetworkInterface')]",
-        "[resourceId('Microsoft.Compute/disks', 'clusterdisk1')]",
-        "[resourceId('Microsoft.Compute/virtualMachines','server1')]"
+        "[resourceId('Microsoft.Compute/disks', 'clusterdisk1')]"
       ],
       "tags": {},
       "properties": {
