@@ -69,7 +69,7 @@ try {
     Write-Log -Entry "Download Answer File Start"
     New-Item -Path "C:\Temp\$($VM)" -ItemType Directory -ErrorAction SilentlyContinue
     $AnswerFilePath = "C:\Temp\$($VM)\unattend.xml"
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ACloudGuru-Resources/content-az-800/master/labs/Deploy%20and%20Configure%20Windows%20Dynamic%20Host%20Configuration%20Protocol%20(DHCP)%20Servers/unattend.xml" -OutFile $AnswerFilePath
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/unattend.xml" -OutFile $AnswerFilePath
     Write-Log -Entry "Download Answer File Success"
 }
 catch {

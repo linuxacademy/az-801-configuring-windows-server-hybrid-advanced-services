@@ -15,7 +15,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies
 
 #Download Scripts
 New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/ACloudGuru-Resources/content-az-800/master/labs/Onboard%20an%20On-Premises%20Windows%20Virtual%20Machine%20into%20Azure%20Arc/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
 
 # Create VMs
 $VMs = @('BRAVM1')
