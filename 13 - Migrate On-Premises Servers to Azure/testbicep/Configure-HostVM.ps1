@@ -31,6 +31,31 @@ Stop-Process -Name Explorer
 
 }
 
+# Check script for psboundparams
+function Get-ScriptParameters {
+    [CmdletBinding()]
+    param()
+
+    if ($PSBoundParameters.Count -gt 0) {
+        foreach ($key in $PSBoundParameters.Keys) {
+            Write-Log -Entry "Parameter name: $key"
+            Write-Log -Entry "Parameter value: $($PSBoundParameters[$key])"
+            Write-Log -Entry "Object type: $([Type]::GetType($PSBoundParameters[$key]))"
+        }
+    }
+}
+
+# Check script for parameters, param value, and param object type
+try{
+    Write-Log -Entry "Parameter check - Processing..."
+    Get-ScriptParameters
+    Write-Log -Entry "Parameter check - Success"
+}
+catch{
+    Write-Log -Entry "Parameter check - Failure"
+    Write-Log -Entry $_
+}
+
 # Diable IEESC
 try{
     Write-Log -Entry "Disable IEESC - Processing..."
