@@ -123,7 +123,8 @@ catch {
 
 # Install Hyper-V
 try{
-    Add-WindowsFeature Hyper-V -IncludeManagementTools
+    Install-WindowsFeature -Name Hyper-V -IncludeAllSubFeature -IncludeManagementTools
+    # Add-WindowsFeature Hyper-V -IncludeManagementTools
     Write-Log -Entry "Succeeded in Install of HyperV"
 }
 catch{
@@ -132,4 +133,4 @@ catch{
 }
 
 #Restart the Server
-Restart-Computer -Force 
+Restart-Computer -Force
