@@ -78,6 +78,10 @@ $VHDLink = $totalfound.Link
 $ParentVHDPath = "C:\Users\Public\Documents\$VHDLink"
 try {
     Invoke-WebRequest -Uri "$VHDLink" -OutFile "$ParentVHDPath"
+    Write-Log -Entry "Successful Download - $ParentVHDPath"
+}
+catch {
+    Write-Log -Entry "Failed to Download - $ParentVHDPath"
 }
 
 # Create VMs
