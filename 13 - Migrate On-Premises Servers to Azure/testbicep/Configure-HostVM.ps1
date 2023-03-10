@@ -123,6 +123,7 @@ catch {
 
 # Install Hyper-V
 try{
+    Write-Log -Entry "Attempting install of Hyper-V..."
     Install-WindowsFeature -Name Hyper-V -IncludeAllSubFeature -IncludeManagementTools
     # Add-WindowsFeature Hyper-V -IncludeManagementTools
     Write-Log -Entry "Succeeded in Install of HyperV"
