@@ -35,6 +35,44 @@ function Wait-VMPowerShellReady ($VM, $Credential)
 #Start a stopwatch to measure the deployment time
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
+# Find Windows VHDs
+$urls = @(
+    'https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019'
+)
+
+# Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
+$totalfound = foreach ($url in $urls) {
+    try {
+        $content = Invoke-WebRequest -Uri $url -ErrorAction Stop
+        $downloadlinks = $content.links | Where-Object { `
+                $_.'aria-label' -match 'Download' `
+                -and $_.'aria-label' -match 'VHD'
+        }
+        $count = $DownloadLinks.href.Count
+        $totalcount += $count
+        Write-Log -Entry "Processing $url, Found $count Download(s)..."
+        foreach ($DownloadLink in $DownloadLinks) {
+            [PSCustomObject]@{
+                Name   = $DownloadLink.'aria-label'.Replace('Download ', '')
+                Tag    = $DownloadLink.'data-bi-tags'.Split('"')[3].split('-')[0]
+                Format = $DownloadLink.'data-bi-tags'.Split('-')[1].ToUpper()
+                Link   = $DownloadLink.href
+            }
+            Write-Log -Entry "Found VHD Image"
+        }
+    }
+    catch {
+        Write-Log -Entry "$url is not accessible"
+        return
+    }
+}
+
+# Download Information to pass to Create-VM.ps1
+$VHDLink = $totalfound.Link
+$VHDName = $totalfound.Name.Split('-')[0]
+$VHDName = $VHDName.Replace(' ', '-')
+$ParentVHDPath = "C:\Users\Public\Documents\$VHDName.vhd"
+
 #Detect if Hyper-V is installed
 if ((Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-All -Online).State -ne 'Enabled') {
     Write-Log -Entry "Hyper-V Role and/or required PowerShell module is not installed, please install before running this script..."
