@@ -1,7 +1,8 @@
 param(
     $UserName,
     $Password,
-    $ParentVHDPath
+    $ParentVHDPath,
+    $VHDLink,
     $VM,
     $IP = '10.2.1.2',
     $Prefix = '24',
@@ -41,6 +42,15 @@ if ((Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-All -Online).Stat
 }
 else {
     Write-Log -Entry "Hyper-V Role is installed, continuing..."
+}
+
+# Download VHDLink
+try {
+    Invoke-WebRequest -Uri "$VHDLink" -OutFile "$ParentVHDPath"
+    Write-Log -Entry "Successful Download - $ParentVHDPath"
+}
+catch {
+    Write-Log -Entry "Failed to Download - $ParentVHDPath"
 }
 
 # Import Hyper-V Module

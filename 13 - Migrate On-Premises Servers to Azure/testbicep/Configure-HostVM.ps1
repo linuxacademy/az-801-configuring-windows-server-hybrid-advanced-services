@@ -31,8 +31,14 @@ Stop-Process -Name Explorer
 
 }
 
-# Call function
-Disable-IEESC 
+# Diable IEESC
+try{
+    Disable-IEESC
+    Write-Log -Entry "Disabled IEESC successfully"
+}
+catch {
+    Write-Log -Entry "Failed to disable IEESC"
+}
 
 # Fix Server UI
 try {
@@ -58,17 +64,15 @@ catch {
     Write-Log $_
 }
 
-# Find and Download Windows VHDs
+# Find Windows VHDs
 $urls = @(
     'https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019'
 )
 
-#Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
-# $ProgressPreference = "SilentlyContinue"
+# Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
 $totalfound = foreach ($url in $urls) {
     try {
         $content = Invoke-WebRequest -Uri $url -ErrorAction Stop
-        #Write-Log -Entry "Content=$content"
         $downloadlinks = $content.links | Where-Object { `
                 $_.'aria-label' -match 'Download' `
                 -and $_.'aria-label' -match 'VHD'
@@ -83,6 +87,7 @@ $totalfound = foreach ($url in $urls) {
                 Format = $DownloadLink.'data-bi-tags'.Split('-')[1].ToUpper()
                 Link   = $DownloadLink.href
             }
+            Write-Log -Entry "Found VHD Image"
         }
     }
     catch {
@@ -92,25 +97,18 @@ $totalfound = foreach ($url in $urls) {
 }
 
 
-# Download VHD(s) to $ParentVHDPath
+# Download Information to pass to Create-VM.ps1
 $VHDLink = $totalfound.Link
 $VHDName = $totalfound.Name.Split('-')[0]
 $VHDName = $VHDName.Replace(' ', '-')
 $ParentVHDPath = "C:\Users\Public\Documents\$VHDName.vhd"
-try {
-    Invoke-WebRequest -Uri "$VHDLink" -OutFile "$ParentVHDPath"
-    Write-Log -Entry "Successful Download - $ParentVHDPath"
-}
-catch {
-    Write-Log -Entry "Failed to Download - $ParentVHDPath"
-}
 
 # Create VMs
 try {
     $VMs = @('nestedVM1')
     foreach ($VM in $VMs) {
         #Set Scheduled Tasks to create the VM after restart
-        $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Create-VM.ps1 -UserName $($UserName) -Password $($Password) -VM $($VM) -ParentVHDPath $($ParentVHDPath)"
+        $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Create-VM.ps1 -UserName $($UserName) -Password $($Password) -VM $($VM) -ParentVHDPath $($ParentVHDPath) -VHDLink $($VHDLink)"
         # Random dleay so both don't run at exactly the same time
         $Trigger = New-ScheduledTaskTrigger -AtStartup
         $Trigger.Delay = 'PT15S'
