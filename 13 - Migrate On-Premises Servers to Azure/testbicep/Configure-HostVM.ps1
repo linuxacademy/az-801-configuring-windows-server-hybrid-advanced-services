@@ -33,12 +33,12 @@ Stop-Process -Name Explorer
 
 # Diable IEESC
 try{
-    Write-Log -Entry "Attempting to disable IEESC"
+    Write-Log -Entry "Disable IEESC - Processing..."
     Disable-IEESC
-    Write-Log -Entry "Disabled IEESC successfully"
+    Write-Log -Entry "Disabled IEESC - Success"
 }
 catch {
-    Write-Log -Entry "Failed to disable IEESC"
+    Write-Log -Entry "Disable IEESC - Failure"
 }
 
 # Fix Server UI
