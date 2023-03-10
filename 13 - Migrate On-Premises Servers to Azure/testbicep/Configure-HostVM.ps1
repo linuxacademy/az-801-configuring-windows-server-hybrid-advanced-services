@@ -1,7 +1,8 @@
  param(
     $UserName,
+    [securestring]
     $Password,
-    $HostVMName = 'vm-az801'
+    $HostVMName
 )
 
 # Speed Up Deployment
@@ -36,12 +37,18 @@ function Get-ScriptParameters {
     [CmdletBinding()]
     param()
 
+    Write-Log -Entry "Get-ScriptParameters - Processing..."
+    Write-Log -Entry "PSBoundParameters.Count: $($PSBoundParameters.Count)"
+
     if ($PSBoundParameters.Count -gt 0) {
         foreach ($key in $PSBoundParameters.Keys) {
             Write-Log -Entry "Parameter name: $key"
             Write-Log -Entry "Parameter value: $($PSBoundParameters[$key])"
             Write-Log -Entry "Object type: $([Type]::GetType($PSBoundParameters[$key]))"
         }
+    }
+    else {
+        Write-Log -Entry "No parameters were passed to the script"
     }
 }
 
