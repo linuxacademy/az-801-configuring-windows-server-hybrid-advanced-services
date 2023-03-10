@@ -1,35 +1,112 @@
 param(
     $UserName,
-    $Password
+    $Password,
+    $HostVMName
 )
 
 # Speed Up Deployment
 $ProgressPreference = "SilentlyContinue"
 $WarningPreference = "SilentlyContinue"
 
+# Configure Logging
+$AllUsersDesktop = [Environment]::GetFolderPath("CommonDesktopDirectory")
+$LogFile = Join-Path -Path $AllUsersDesktop -ChildPath "$($HostVMName)-Hostsetup.log" 
+
+function Write-Log ($Entry, $Path = $LogFile) {
+    Add-Content -Path $LogFile -Value "$((Get-Date).ToShortDateString()) $((Get-Date).ToShortTimeString()): $($Entry)" 
+} 
+
 # Fix Server UI
-Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask -Verbose
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "HideClock" -Value 1
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "DisableNotificationCenter" -Value 1
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "HideSCAVolume" -Value 1
+try {
+    Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask -Verbose
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "HideClock" -Value 1
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "DisableNotificationCenter" -Value 1
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "HideSCAVolume" -Value 1
+    Write-Log -Entry "Fixed Server UI Successfully" 
+}
+catch {
+    Write-Log -Entry "Fixed Server UI Failed"
+    Write-Log $_
+}
 
 #Download Scripts
-New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
+try {
+    New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
+    Write-Log -Entry "Download HyperV VM Creation Script Successfully"
+}
+catch {
+    Write-Log -Entry "Download HyperV VM Creation Script Failed"
+    Write-Log $_
+}
+
+# Find and Download Windows VHDs
+$urls = @(
+    'https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019'
+)
+
+#Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
+$ProgressPreference = "SilentlyContinue"
+$totalfound = foreach ($url in $urls) {
+    try {
+        $content = Invoke-WebRequest -Uri $url -ErrorAction Stop
+        $downloadlinks = $content.links | Where-Object { `
+                $_.'aria-label' -match 'Download' `
+                -and $_.'aria-label' -match 'VHD'
+        }
+        $count = $DownloadLinks.href.Count
+        $totalcount += $count
+        Write-Log -Entry "Processing $url, Found $count Download(s)..."
+        foreach ($DownloadLink in $DownloadLinks) {
+            [PSCustomObject]@{
+                Title  = $content.ParsedHtml.title.Split('|')[0]
+                Name   = $DownloadLink.'aria-label'.Replace('Download ', '')
+                Tag    = $DownloadLink.'data-bi-tags'.Split('"')[3].split('-')[0]
+                Format = $DownloadLink.'data-bi-tags'.Split('-')[1].ToUpper()
+                Link   = $DownloadLink.href
+            }
+        }
+    }
+    catch {
+        Write-Log -Entry "$url is not accessible"
+        return
+    }
+}
+
+# Download VHD(s) to $ParentVHDPath
+$VHDLink = $totalfound.Link
+$ParentVHDPath = "C:\Users\Public\Documents\$VHDLink"
+try {
+    Invoke-WebRequest -Uri "$VHDLink" -OutFile "$ParentVHDPath"
+}
 
 # Create VMs
-$VMs = @('nestedVM1')
-foreach ($VM in $VMs) {
-    #Set Scheduled Tasks to create the VM after restart
-    $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Create-VM.ps1 -UserName $($UserName) -Password $($Password) -VM $($VM)"
-    # Random dleay so both don't run at exactly the same time
-    $Trigger = New-ScheduledTaskTrigger -AtStartup
-    $Trigger.Delay = 'PT15S'
-    Register-ScheduledTask -TaskName "Create-VM $($VM)" -Action $Action -Trigger $Trigger -Description "Create VM" -RunLevel Highest -User "System"
+try {
+    $VMs = @('nestedVM1')
+    foreach ($VM in $VMs) {
+        #Set Scheduled Tasks to create the VM after restart
+        $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Create-VM.ps1 -UserName $($UserName) -Password $($Password) -VM $($VM) -ParentVHDPath $($ParentVHDPath)"
+        # Random dleay so both don't run at exactly the same time
+        $Trigger = New-ScheduledTaskTrigger -AtStartup
+        $Trigger.Delay = 'PT15S'
+        Register-ScheduledTask -TaskName "Create-VM $($VM)" -Action $Action -Trigger $Trigger -Description "Create VM" -RunLevel Highest -User "System"
+        Write-Log -Entry "Succeeded to Create Hyper VM Creation Scheduled Task for $VM"
+    }
+}
+catch {
+    Write-Log -Entry "Failed to Create HyperV VM Creation Scheduled Task for $VM"
+    Write-Log $_
 }
 
 # Install Hyper-V
-Add-WindowsFeature Hyper-V -IncludeManagementTools
+try{
+    Add-WindowsFeature Hyper-V -IncludeManagementTools
+    Write-Log -Entry "Succeeded in Install of HyperV"
+}
+catch{
+    Write-Log -Entry "Failed to Install HyperV"
+    Write-Log $_
+}
 
 #Restart the Server
 Restart-Computer -Force

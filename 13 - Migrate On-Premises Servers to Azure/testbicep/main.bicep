@@ -138,7 +138,7 @@ resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' 
       fileUris: [
         'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Configure-HostVM.ps1'
       ]
-      commandToExecute: 'powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName "${vmUserName} "-Password "${vmPassword}"'
+      commandToExecute: 'powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName "${vmUserName}" -Password "${vmPassword}" -HostVMName "${vm_az801.name}"'
     }
   }
 }

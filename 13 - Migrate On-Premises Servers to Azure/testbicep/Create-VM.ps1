@@ -1,6 +1,7 @@
 param(
     $UserName,
     $Password,
+    $ParentVHDPath
     $VM,
     $IP = '10.2.1.2',
     $Prefix = '24',
@@ -28,10 +29,28 @@ function Wait-VMPowerShellReady ($VM, $Credential)
     while (-not (Invoke-Command -ScriptBlock {Get-ComputerInfo} -VMName $VM -Credential $Credential -ErrorAction SilentlyContinue)) {
         Start-Sleep -Seconds 1
     }
-} 
+}
+
+#Start a stopwatch to measure the deployment time
+$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
+#Detect if Hyper-V is installed
+if ((Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-All -Online).State -ne 'Enabled') {
+    Write-Log -Entry "Hyper-V Role and/or required PowerShell module is not installed, please install before running this script..."
+    return
+}
+else {
+    Write-Log -Entry "Hyper-V Role is installed, continuing..."
+}
 
 # Import Hyper-V Module
-Import-Module Hyper-V
+try{
+    Import-Module Hyper-V
+    Write-Log -Entry "Imported Hyper-V Module Successfully"
+}
+catch{
+    Write-Log -Entry "Failed to Import Hyper-V Module"
+}
 
 # Wait for Hyper-V
 while (-not(Get-VMHost -ErrorAction SilentlyContinue)) {
@@ -57,10 +76,10 @@ try{
 # Create VHD
 try {
     Write-Log -Entry "Create VHD Start"
-    New-VHD -ParentPath "C:\Users\Public\Documents\20348.169.amd64fre.fe_release_svc_refresh.210806-2348_server_serverdatacentereval_en-us.vhd" -Path "C:\Temp\$($VM).vhd" -Differencing
+    New-VHD -ParentPath "$ParentVHDPath" -Path "C:\Temp\$($VM).vhd" -Differencing
     Write-Log -Entry "Create VHD Success"
 } catch {
-    Write-Log -Entry "Create VHD Failed. Please contact Support."
+    Write-Log -Entry "Create VHD Failed. Please contact support."
     Exit
 }
 
@@ -172,4 +191,10 @@ catch {
 
 Wait-VMReady -VM $VM
 
-Write-Log -Entry "LAB READY" 
+#The end, stop stopwatch and display the time that it took to deploy
+$stopwatch.Stop()
+$hours = $stopwatch.Elapsed.Hours
+$minutes = $stopwatch.Elapsed.Minutes
+$seconds = $stopwatch.Elapsed.Seconds
+
+Write-Log -Entry "Deployment Completed Successfully - Deployment Time in HH:MM:SS format - $hours:$minutes:$seconds"
