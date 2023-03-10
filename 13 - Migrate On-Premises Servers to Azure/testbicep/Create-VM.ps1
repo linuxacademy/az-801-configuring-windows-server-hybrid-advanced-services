@@ -1,8 +1,6 @@
 param(
     $UserName,
     $Password,
-    $ParentVHDPath,
-    $VHDLink,
     $VM,
     $IP = '10.2.1.2',
     $Prefix = '24',
