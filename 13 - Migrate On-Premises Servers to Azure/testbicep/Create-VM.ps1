@@ -8,7 +8,7 @@ param(
     $DNSServers = @('168.63.129.16')
 )
 # Set the Error Action Preference
-$ErrorActionPreference = 'Stop'
+# $ErrorActionPreference = 'Stop'
 
 # Configure Logging
 $AllUsersDesktop = [Environment]::GetFolderPath("CommonDesktopDirectory")
