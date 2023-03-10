@@ -64,7 +64,7 @@ $urls = @(
 )
 
 #Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
-$ProgressPreference = "SilentlyContinue"
+# $ProgressPreference = "SilentlyContinue"
 $totalfound = foreach ($url in $urls) {
     try {
         $content = Invoke-WebRequest -Uri $url -ErrorAction Stop
