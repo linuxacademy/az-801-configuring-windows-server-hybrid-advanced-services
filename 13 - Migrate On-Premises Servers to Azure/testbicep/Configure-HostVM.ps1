@@ -1,7 +1,7 @@
-param(
-    $UserName,
-    $Password,
-    $HostVMName
+ param(
+    $UserName = 'azureuser',
+    $Password = 'p@55w0rd',
+    $HostVMName = 'vm-az801'
 )
 
 # Speed Up Deployment
@@ -14,7 +14,25 @@ $LogFile = Join-Path -Path $AllUsersDesktop -ChildPath "$($HostVMName)-Hostsetup
 
 function Write-Log ($Entry, $Path = $LogFile) {
     Add-Content -Path $LogFile -Value "$((Get-Date).ToShortDateString()) $((Get-Date).ToShortTimeString()): $($Entry)" 
-} 
+}
+
+# Function to disable IEESC
+function Disable-IEESC {
+
+$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+
+$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+
+Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+
+Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+
+Stop-Process -Name Explorer
+
+}
+
+# Call function
+Disable-IEESC 
 
 # Fix Server UI
 try {
@@ -50,6 +68,7 @@ $ProgressPreference = "SilentlyContinue"
 $totalfound = foreach ($url in $urls) {
     try {
         $content = Invoke-WebRequest -Uri $url -ErrorAction Stop
+        #Write-Log -Entry "Content=$content"
         $downloadlinks = $content.links | Where-Object { `
                 $_.'aria-label' -match 'Download' `
                 -and $_.'aria-label' -match 'VHD'
@@ -59,7 +78,6 @@ $totalfound = foreach ($url in $urls) {
         Write-Log -Entry "Processing $url, Found $count Download(s)..."
         foreach ($DownloadLink in $DownloadLinks) {
             [PSCustomObject]@{
-                Title  = $content.ParsedHtml.title.Split('|')[0]
                 Name   = $DownloadLink.'aria-label'.Replace('Download ', '')
                 Tag    = $DownloadLink.'data-bi-tags'.Split('"')[3].split('-')[0]
                 Format = $DownloadLink.'data-bi-tags'.Split('-')[1].ToUpper()
@@ -73,9 +91,12 @@ $totalfound = foreach ($url in $urls) {
     }
 }
 
+
 # Download VHD(s) to $ParentVHDPath
 $VHDLink = $totalfound.Link
-$ParentVHDPath = "C:\Users\Public\Documents\$VHDLink"
+$VHDName = $totalfound.Name.Split('-')[0]
+$VHDName = $VHDName.Replace(' ', '-')
+$ParentVHDPath = "C:\Users\Public\Documents\$VHDName.vhd"
 try {
     Invoke-WebRequest -Uri "$VHDLink" -OutFile "$ParentVHDPath"
     Write-Log -Entry "Successful Download - $ParentVHDPath"
@@ -113,4 +134,4 @@ catch{
 }
 
 #Restart the Server
-Restart-Computer -Force
+Restart-Computer -Force 
