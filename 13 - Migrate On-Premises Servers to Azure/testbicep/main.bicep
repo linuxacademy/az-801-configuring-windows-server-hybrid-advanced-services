@@ -25,6 +25,12 @@ resource vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
           }
         }
       }
+      {
+        name: 'AzureBastionSubnet'
+        properties: {
+          addressPrefix: '10.0.1.0/26'
+        }
+      }
     ]
   }
 }
@@ -140,5 +146,42 @@ resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' 
       ]
       commandToExecute: 'powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName "${vmUserName}" -Password "${vmPassword}" -HostVMName "${vm_az801.name}"'
     }
+  }
+}
+
+resource public_ip_az801_bastion 'Microsoft.Network/publicIPAddresses@2020-11-01' = {
+  name: 'pip-az801-bastion'
+  location: location
+  sku: {
+      name: 'Standard'
+  }
+  properties: {
+      publicIPAddressVersion: 'IPv4'
+      publicIPAllocationMethod: 'Static'
+  }
+}
+
+// Create the Azure Bastion resource
+resource bastion 'Microsoft.Network/bastionHosts@2020-11-01' = {
+  name: 'b59-bastion'
+  location: location
+  sku: {
+      name: 'Basic'
+  }
+  properties: {
+      ipConfigurations: [
+          {
+              name: 'IpConf'
+              properties: {
+                  privateIPAllocationMethod: 'Dynamic'
+                  publicIPAddress: {
+                      id: public_ip_az801_bastion.id
+                  }
+                  subnet: {
+                      id: vnet_az801.properties.subnets[1].id
+                  }
+              }
+          }
+      ]
   }
 }
