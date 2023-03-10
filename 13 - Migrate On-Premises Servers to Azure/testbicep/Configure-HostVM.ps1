@@ -1,6 +1,6 @@
  param(
-    $UserName = 'azureuser',
-    $Password = 'p@55w0rd',
+    $UserName,
+    $Password,
     $HostVMName = 'vm-az801'
 )
 
