@@ -117,46 +117,58 @@ catch {
     Write-Log $_
 }
 
-# Find Windows VHDs
-$urls = @(
-    'https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019'
-)
+# # Find Windows VHDs
+# $urls = @(
+#     'https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019'
+# )
 
-# Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
-$totalfound = foreach ($url in $urls) {
-    try {
-        $content = Invoke-WebRequest -Uri $url
-        $downloadlinks = $content.links | Where-Object { `
-                $_.'aria-label' -match 'Download' `
-                -and $_.'aria-label' -match 'VHD'
-        }
-        $count = $DownloadLinks.href.Count
-        $totalcount += $count
-        Write-Log -Entry "Processing $url, Found $count Download(s)..."
-        foreach ($DownloadLink in $DownloadLinks) {
-            [PSCustomObject]@{
-                Name   = $DownloadLink.'aria-label'.Replace('Download ', '')
-                Tag    = $DownloadLink.'data-bi-tags'.Split('"')[3].split('-')[0]
-                Format = $DownloadLink.'data-bi-tags'.Split('-')[1].ToUpper()
-                Link   = $DownloadLink.href
-            }
-            Write-Log -Entry "Found VHD Image"
-        }
-    }
-    catch {
-        Write-Log -Entry "$url is not accessible"
-        return
-    }
+# # Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
+# $totalfound = foreach ($url in $urls) {
+#     try {
+#         $content = Invoke-WebRequest -Uri $url
+#         $downloadlinks = $content.links | Where-Object { `
+#                 $_.'aria-label' -match 'Download' `
+#                 -and $_.'aria-label' -match 'VHD'
+#         }
+#         $count = $DownloadLinks.href.Count
+#         $totalcount += $count
+#         Write-Log -Entry "Processing $url, Found $count Download(s)..."
+#         foreach ($DownloadLink in $DownloadLinks) {
+#             [PSCustomObject]@{
+#                 Name   = $DownloadLink.'aria-label'.Replace('Download ', '')
+#                 Tag    = $DownloadLink.'data-bi-tags'.Split('"')[3].split('-')[0]
+#                 Format = $DownloadLink.'data-bi-tags'.Split('-')[1].ToUpper()
+#                 Link   = $DownloadLink.href
+#             }
+#             Write-Log -Entry "Found VHD Image"
+#         }
+#     }
+#     catch {
+#         Write-Log -Entry "$url is not accessible"
+#         return
+#     }
+# }
+
+
+# # Download Information to pass to Create-VM.ps1
+# $VHDLink = $totalfound.Link
+# $VHDName = $totalfound.Name.Split('-')[0]
+# $VHDName = $VHDName.Replace(' ', '-')
+# $ParentVHDPath = "C:\Users\Public\Documents\$VHDName.vhd"
+
+$VHDLink = 'https://go.microsoft.com/fwlink/p/?linkid=2195334&clcid=0x409&culture=en-us&country=us'
+$ParentVHDPath = 'C:\Users\Public\Documents\win-2019-64.vhd'
+
+try{
+    Write-Log -Entry "Download VHD - $VHDLink - Processing..."
+    Invoke-WebRequest -Uri $VHDLink -OutFile $ParentVHDPath
+    Write-Log -Entry "Download VHD - $VHDLink - Success"
+}
+catch {
+    Write-Log -Entry "Download VHD - $VHDLink - Failed"
+    Write-Log -Entry "$_"
 }
 
-
-# Download Information to pass to Create-VM.ps1
-$VHDLink = $totalfound.Link
-$VHDName = $totalfound.Name.Split('-')[0]
-$VHDName = $VHDName.Replace(' ', '-')
-$ParentVHDPath = "C:\Users\Public\Documents\$VHDName.vhd"
-
-Invoke-WebRequest -Uri $VHDLink -OutFile $ParentVHDPath
 
 # # VM Creation Loop
 # try {
