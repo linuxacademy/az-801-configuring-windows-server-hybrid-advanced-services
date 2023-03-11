@@ -125,7 +125,7 @@ $urls = @(
 # Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
 $totalfound = foreach ($url in $urls) {
     try {
-        $content = Invoke-WebRequest -Uri $url -ErrorAction Stop
+        $content = Invoke-WebRequest -Uri $url
         $downloadlinks = $content.links | Where-Object { `
                 $_.'aria-label' -match 'Download' `
                 -and $_.'aria-label' -match 'VHD'
