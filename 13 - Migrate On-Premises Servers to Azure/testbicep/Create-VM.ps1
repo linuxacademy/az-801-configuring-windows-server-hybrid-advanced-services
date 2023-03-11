@@ -244,4 +244,4 @@ $hours = $stopwatch.Elapsed.Hours
 $minutes = $stopwatch.Elapsed.Minutes
 $seconds = $stopwatch.Elapsed.Seconds
 
-Write-Log -Entry "Deployment Completed Successfully - Deployment Time in HH:MM:SS format - $hours:$minutes:$seconds"
+Write-Log -Entry "Deployment Completed Successfully - Deployment Time in HH:MM:SS format - $($hours):$($minutes):$($seconds)"
