@@ -51,6 +51,7 @@ function Get-ScriptParameters {
     }
 }
 
+Write-Log -Entry "$($PSBoundParameters.Count)"
 # Check script for parameters, param value, and param object type
 try{
     Write-Log -Entry "Parameter check - Processing..."
