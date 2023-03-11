@@ -51,17 +51,35 @@ function Get-ScriptParameters {
     }
 }
 
-Write-Log -Entry "$($PSBoundParameters.Count)"
-# Check script for parameters, param value, and param object type
 try{
-    Write-Log -Entry "Parameter check - Processing..."
-    Get-ScriptParameters
-    Write-Log -Entry "Parameter check - Success"
+    $ScriptParameters = $($PSBoundParameters)
+    Write-Log "Get PSBoundParameters - Processing..."
+    Write-Log -Entry "Bound Paramertes - $ScriptParameters"
+    if ($ScriptParameters.Count -gt 0) {
+        foreach ($key in $ScriptParameters.Keys) {
+            Write-Log -Entry "Getting Parameter..."
+            Write-Log -Entry "Parameter name: $key"
+            Write-Log -Entry "Parameter value: $($ScriptParameter[$key])"
+            Write-Log -Entry "Object Type: $([Type]::GetType($ScriptParameters[$key]))"
+        }
+    }
+    Write-Log -Entry "Parmeters counted - $($PSBoundParameters.Count)"
 }
 catch{
-    Write-Log -Entry "Parameter check - Failure"
+    Write-Log -Entry "Get PSBoundParemeters - Failed"
     Write-Log -Entry $_
 }
+
+# # Check script for parameters, param value, and param object type
+# try{
+#     Write-Log -Entry "Parameter check - Processing..."
+#     Get-ScriptParameters
+#     Write-Log -Entry "Parameter check - Success"
+# }
+# catch{
+#     Write-Log -Entry "Parameter check - Failure"
+#     Write-Log -Entry $_
+# }
 
 # Diable IEESC
 try{
