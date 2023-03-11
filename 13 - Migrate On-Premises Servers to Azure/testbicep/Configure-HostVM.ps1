@@ -31,44 +31,44 @@ Stop-Process -Name Explorer
 
 }
 
-# Check script for psboundparams
-function Get-ScriptParameters {
-    [CmdletBinding()]
-    param()
+# # Check script for psboundparams
+# function Get-ScriptParameters {
+#     [CmdletBinding()]
+#     param()
 
-    Write-Log -Entry "Get-ScriptParameters - Processing..."
-    Write-Log -Entry "PSBoundParameters.Count: $($PSBoundParameters.Count)"
+#     Write-Log -Entry "Get-ScriptParameters - Processing..."
+#     Write-Log -Entry "PSBoundParameters.Count: $($PSBoundParameters.Count)"
 
-    if ($PSBoundParameters.Count -gt 0) {
-        foreach ($key in $PSBoundParameters.Keys) {
-            Write-Log -Entry "Parameter name: $key"
-            Write-Log -Entry "Parameter value: $($PSBoundParameters[$key])"
-            Write-Log -Entry "Object type: $([Type]::GetType($PSBoundParameters[$key]))"
-        }
-    }
-    else {
-        Write-Log -Entry "No parameters were passed to the script"
-    }
-}
+#     if ($PSBoundParameters.Count -gt 0) {
+#         foreach ($key in $PSBoundParameters.Keys) {
+#             Write-Log -Entry "Parameter name: $key"
+#             Write-Log -Entry "Parameter value: $($PSBoundParameters[$key])"
+#             Write-Log -Entry "Object type: $([Type]::GetType($PSBoundParameters[$key]))"
+#         }
+#     }
+#     else {
+#         Write-Log -Entry "No parameters were passed to the script"
+#     }
+# }
 
-try{
-    $ScriptParameters = $($PSBoundParameters)
-    Write-Log "Get PSBoundParameters - Processing..."
-    Write-Log -Entry "Bound Paramertes - $ScriptParameters"
-    if ($ScriptParameters.Count -gt 0) {
-        foreach ($key in $ScriptParameters.Keys) {
-            Write-Log -Entry "Getting Parameter..."
-            Write-Log -Entry "Parameter name: $key"
-            Write-Log -Entry "Parameter value: $($ScriptParameter[$key])"
-            Write-Log -Entry "Object Type: $([Type]::GetType($ScriptParameters[$key]))"
-        }
-    }
-    Write-Log -Entry "Parmeters counted - $($PSBoundParameters.Count)"
-}
-catch{
-    Write-Log -Entry "Get PSBoundParemeters - Failed"
-    Write-Log -Entry $_
-}
+# try{
+#     $ScriptParameters = $($PSBoundParameters)
+#     Write-Log "Get PSBoundParameters - Processing..."
+#     Write-Log -Entry "Bound Paramertes - $ScriptParameters"
+#     if ($ScriptParameters.Count -gt 0) {
+#         foreach ($key in $ScriptParameters.Keys) {
+#             Write-Log -Entry "Getting Parameter..."
+#             Write-Log -Entry "Parameter name: $key"
+#             Write-Log -Entry "Parameter value: $($ScriptParameter[$key])"
+#             Write-Log -Entry "Object Type: $([Type]::GetType($ScriptParameters[$key]))"
+#         }
+#     }
+#     Write-Log -Entry "Parmeters counted - $($PSBoundParameters.Count)"
+# }
+# catch{
+#     Write-Log -Entry "Get PSBoundParemeters - Failed"
+#     Write-Log -Entry $_
+# }
 
 # # Check script for parameters, param value, and param object type
 # try{
