@@ -1,6 +1,5 @@
  param(
     $UserName,
-    [securestring]
     $Password,
     $HostVMName
 )
