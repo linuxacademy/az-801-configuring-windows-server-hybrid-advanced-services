@@ -1,8 +1,8 @@
 param(
-    $UserName,
-    $Password,
-    $ParentVHDPath,
-    $VM,
+    $UserName = 'azureuser',
+    $Password = 'Londyn0101',
+    $ParentVHDPath = 'C:\Users\Public\Documents\win-2019-64.vhd',
+    $VM = 'nestedVM2',
     $IP = '10.2.1.2',
     $Prefix = '24',
     $DefaultGateway = '10.2.1.1',
@@ -31,8 +31,8 @@ function Wait-VMPowerShellReady ($VM, $Credential)
     }
 }
 
-# #Start a stopwatch to measure the deployment time
-# $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+#Start a stopwatch to measure the deployment time
+$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 # # Find Windows VHDs
 # $urls = @(
@@ -80,6 +80,7 @@ if ((Get-WindowsFeature -Name 'Hyper-V').InstallState -ne 'Installed') {
 }
 else {
     Write-Log -Entry "Hyper-V Role is installed, continuing..."
+    Write-Log -Entry $_
 }
 
 # # Download VHDLink
@@ -98,6 +99,8 @@ try{
 }
 catch{
     Write-Log -Entry "Failed to Import Hyper-V Module"
+    Write-Log -Entry $_
+    Exit
 }
 
 # Wait for Hyper-V
@@ -124,10 +127,11 @@ try{
 # Create VHD
 try {
     Write-Log -Entry "Create VHD Start"
-    New-VHD -ParentPath "$($ParentVHDPath)" -Path "C:\Temp\$($VM).vhd" -Differencing
+    New-VHD -ParentPath "$ParentVHDPath" -Path "C:\Temp\$($VM).vhd" -Differencing
     Write-Log -Entry "Create VHD Success"
 } catch {
     Write-Log -Entry "Create VHD Failed. Please contact support."
+    Write-Log -Entry $_
     Exit
 }
 
@@ -141,6 +145,7 @@ try {
 }
 catch {
     Write-Log -Entry "Download Answer File Failed. Please contact Support."
+    Write-Log -Entry $_
     Exit
 }
 
@@ -156,6 +161,7 @@ try {
 }
 catch {
     Write-Log -Entry "Update Answer File Failed. Please contact Support."
+    Write-Log -Entry $_
     Exit
 }
 
@@ -169,6 +175,7 @@ try {
 }
 catch {
     Write-Log -Entry "Inject Answer File into VHD Failed. Please contact Support."
+    Write-Log -Entry $_
     Exit
 }
 
@@ -180,6 +187,7 @@ try {
 }
 catch {
     Write-Log -Entry "Dismount VHD Failed. Please contact Support."
+    Write-Log -Entry $_
     Exit
 }
 
@@ -201,6 +209,7 @@ try {
 }
 catch {
     Write-Log -Entry "Create and Start VM Failed. Please contact Support."
+    Write-Log -Entry $_
     Exit
 }
 
@@ -213,31 +222,93 @@ try {
     [pscredential]$Credential = New-Object System.Management.Automation.PSCredential ("Administrator", $SecurePassword)
 
     # Wait for the VM to be ready
-    Wait-VMReady -VM $VM
+    try {
+        Wait-VMReady -VM $VM
+        Write-Log -Entry "$($VM) is ready"
+    }
+    catch {
+        Write-Log -Entry "$($VM) is not ready"
+        Write-Log -Entry $_
+        Exit
+    }
+    # Wait-VMReady -VM $VM
+    # Write-Log -Entry "$($VM) is ready"
 
-    # Wait for Unattend to run
-    Wait-VMPowerShellReady -VM $VM -Credential $Credential
+    try {
+        # Wait for Unattend to run
+        Wait-VMPowerShellReady -VM $VM -Credential $Credential
+        Write-Log -Entry "$($VM) PowerShell is ready"
+    }
+    catch {
+        Write-Log -Entry "$($VM) PowerShell is not ready"
+        Write-Log -Entry $_
+        Exit
+    }
+    # # Wait for Unattend to run
+    # Wait-VMPowerShellReady -VM $VM -Credential $Credential
+    # Write-Log -Entry "$($VM) PowerShell is ready"
 
     # Configure IP addresssing
     # IP
-    Invoke-Command -ScriptBlock {New-NetIPAddress -IPAddress $using:IP -PrefixLength $using:Prefix -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -DefaultGateway $using:DefaultGateway | Out-Null} -VMName $VM -Credential $Credential
+    try {
+        Invoke-Command -ScriptBlock {New-NetIPAddress -IPAddress $using:IP -PrefixLength $using:Prefix -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -DefaultGateway $using:DefaultGateway | Out-Null} -VMName $VM -Credential $Credential
+        Write-Log -Entry "Update $($VM) IP - Success"
+    }
+    catch {
+        Write-Log -Entry "Update $($VM) IP - Failed"
+        Write-Log -Entry $_
+        Exit
+    }
     # DNS
-    Invoke-Command -ScriptBlock {Set-DnsClientServerAddress -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -ServerAddresses $using:DNSServers | Out-Null} -VMName $VM -Credential $Credential
+    try {
+        Invoke-Command -ScriptBlock {Set-DnsClientServerAddress -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -ServerAddresses $using:DNSServers | Out-Null} -VMName $VM -Credential $Credential
+        Write-Log -Entry "Update $($VM) DNS - Success"
+    }
+    catch {
+        Write-Log -Entry "Update $($VM) DNS - Failed"
+        Write-Log -Entry $_
+        Exit
+    }
     
     # Rename VM
-    Invoke-Command -ScriptBlock {Rename-Computer -NewName $using:VM -Restart:$false} -VMName $VM -Credential $Credential
+    try {
+        Invoke-Command -ScriptBlock {Rename-Computer -NewName $using:VM -Restart:$false} -VMName $VM -Credential $Credential
+        Write-Log -Entry "Update $($VM) Name - Success"
+    }
+    catch {
+        Write-Log -Entry "Update $($VM) Name - Failed"
+        Write-Log -Entry $_
+        Exit
+    }
 
     # Restart VM
-    Restart-VM -Name "$($VM)" -Force
+    try {
+        Restart-VM -Name "$($VM)" -Force
+        Write-Log -Entry "Restart $($VM) - Success"
+    }
+    catch {
+        Write-Log -Entry "Restart $($VM) - Failed"
+        Write-Log -Entry $_
+        Exit
+    }
     
     Write-Log -Entry "VM Customization Success"
 }
 catch {
     Write-Log -Entry "VM Customization Failed. Please contact Support."
+    Write-Log -Entry $_
     Exit
 }
 
-Wait-VMReady -VM $VM
+try {
+    Wait-VMReady -VM $VM
+    Write-Log -Entry "Readiness Check $($VM) - Success"
+}
+catch {
+    Write-Log -Entry "Readiness Check $($VM) - Failed"
+    Write-Log -Entry $_
+    Exit
+}
 
 #The end, stop stopwatch and display the time that it took to deploy
 $stopwatch.Stop()
