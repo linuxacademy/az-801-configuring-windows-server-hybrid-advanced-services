@@ -1,7 +1,7 @@
 param(
-    $UserName = 'azureuser',
-    $Password = 'Londyn0101',
-    $ParentVHDPath = 'C:\Users\Public\Documents\win-2019-64.vhd',
+    $UserName,
+    $Password,
+    $ParentVHDPath,
     $VM = 'nestedVM2',
     $IP = '10.2.1.2',
     $Prefix = '24',
