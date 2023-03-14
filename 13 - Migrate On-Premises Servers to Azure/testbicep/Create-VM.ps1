@@ -9,7 +9,7 @@ param(
     $DNSServers = @('168.63.129.16')
 )
 # Set the Error Action Preference
-# $ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Stop'
 
 # Configure Logging
 $AllUsersDesktop = [Environment]::GetFolderPath("CommonDesktopDirectory")
@@ -31,8 +31,8 @@ function Wait-VMPowerShellReady ($VM, $Credential)
     }
 }
 
-#Start a stopwatch to measure the deployment time
-$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+# #Start a stopwatch to measure the deployment time
+# $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
 # # Find Windows VHDs
 # $urls = @(
@@ -124,7 +124,7 @@ try{
 # Create VHD
 try {
     Write-Log -Entry "Create VHD Start"
-    New-VHD -ParentPath "$ParentVHDPath" -Path "C:\Temp\$($VM).vhd" -Differencing
+    New-VHD -ParentPath "$($ParentVHDPath)" -Path "C:\Temp\$($VM).vhd" -Differencing
     Write-Log -Entry "Create VHD Success"
 } catch {
     Write-Log -Entry "Create VHD Failed. Please contact support."
@@ -210,7 +210,7 @@ try {
     Write-Log -Entry "VM Customization Start"
     # Generate Credentials
     $SecurePassword = ConvertTo-SecureString "$($Password)" -AsPlainText -Force
-    [pscredential]$Credential = New-Object System.Management.Automation.PSCredential ($UserName, $SecurePassword)
+    [pscredential]$Credential = New-Object System.Management.Automation.PSCredential ("Administrator", $SecurePassword)
 
     # Wait for the VM to be ready
     Wait-VMReady -VM $VM
