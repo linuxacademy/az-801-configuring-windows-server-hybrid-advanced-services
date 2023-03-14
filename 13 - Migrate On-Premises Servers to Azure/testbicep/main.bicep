@@ -1,7 +1,9 @@
-param location string = resourceGroup().location
+// param location string = resourceGroup().location
 param vmUserName string
 @secure()
 param vmPassword string
+
+var location = resourceGroup().location
 
 // var customImageDefinitionName = 'Win2022_Eval_VHD'
 // var customImageResourceId = resourceId('07089ab1-6f34-49b2-9cad-f1a654494a69', 'LACustomImagesRG', 'Microsoft.Compute/galleries/images/versions', 'LAImagesGallery', customImageDefinitionName, 'latest')
