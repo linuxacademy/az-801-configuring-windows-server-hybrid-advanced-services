@@ -170,48 +170,48 @@ catch {
 }
 
 
-# # VM Creation Loop
-# try {
-#     Write-Log -Entry "Creating loop - Processing..."
-#     $VMs = @('nestedVM1')
-#     foreach ($VM in $VMs) {
-#         try {
-#             Write-Log -Entry "Scheduled task creation for $VM - Processing..."
-#             # Create scheduled task action
-#             $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Create-VM.ps1 -UserName $($UserName) -Password $($Password) -VM $($VM)"
-#             Write-Log -Entry "Scheduled task creation for $VM - Success"
-#         }
-#         catch {
-#             Write-Log -Entry "Scheduled task creation for $VM - Failure"
-#             Write-Log -Entry $_
-#         }
-#         try {
-#             # Create scheduled task trigger
-#             Write-Log -Entry "Schedule task trigger for $VM - Processing..."
-#             $Trigger = New-ScheduledTaskTrigger -AtStartup
-#             $Trigger.Delay = 'PT15S'
-#             Write-Log -Entry "Schedule task trigger for $VM - Success"
-#         }
-#         catch {
-#             Write-Log -Entry "Scheduled task creation for $VM - Failure"
-#             Write-Log -Entry $_
-#         }
-#         try {
-#             Write-Log -Entry "Scheduled task registration for $VM - Processing..."
-#             Register-ScheduledTask -TaskName "Create-VM $($VM)" -Action $Action -Trigger $Trigger -Description "Create VM" -RunLevel Highest -User "System"
-#             Write-Log -Entry "Scheduled task registration for $VM - Success"
-#         }
-#         catch {
-#             Write-Log -Entry "Scheduled task registration for $VM - Failure"
-#             Write-Log -Entry $_
-#         }
-#     }
-#     Write-Log -Entry "Creating loop - Success"
-# }
-# catch {
-#     Write-Log -Entry "Creating loop - Failure"
-#     Write-Log $_
-# }
+# VM Scheduled Task Creation Loop
+try {
+    Write-Log -Entry "Creating loop - Processing..."
+    $VMs = @('nestedVM1')
+    foreach ($VM in $VMs) {
+        try {
+            Write-Log -Entry "Scheduled task creation for $VM - Processing..."
+            # Create scheduled task action
+            $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Create-VM.ps1 -UserName $($UserName) -Password $($Password) -VM $($VM) -ParentVHDPath $($ParentVHDPath)"
+            Write-Log -Entry "Scheduled task creation for $VM - Success"
+        }
+        catch {
+            Write-Log -Entry "Scheduled task creation for $VM - Failure"
+            Write-Log -Entry $_
+        }
+        try {
+            # Create scheduled task trigger
+            Write-Log -Entry "Schedule task trigger for $VM - Processing..."
+            $Trigger = New-ScheduledTaskTrigger -AtStartup
+            $Trigger.Delay = 'PT15S'
+            Write-Log -Entry "Schedule task trigger for $VM - Success"
+        }
+        catch {
+            Write-Log -Entry "Scheduled task creation for $VM - Failure"
+            Write-Log -Entry $_
+        }
+        try {
+            Write-Log -Entry "Scheduled task registration for $VM - Processing..."
+            Register-ScheduledTask -TaskName "Create-VM $($VM)" -Action $Action -Trigger $Trigger -Description "Create VM" -RunLevel Highest -User "System"
+            Write-Log -Entry "Scheduled task registration for $VM - Success"
+        }
+        catch {
+            Write-Log -Entry "Scheduled task registration for $VM - Failure"
+            Write-Log -Entry $_
+        }
+    }
+    Write-Log -Entry "Creating loop - Success"
+}
+catch {
+    Write-Log -Entry "Creating loop - Failure"
+    Write-Log $_
+}
 
 # Install Hyper-V
 try{
