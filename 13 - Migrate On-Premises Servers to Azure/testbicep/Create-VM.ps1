@@ -74,9 +74,9 @@ $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 # $ParentVHDPath = "C:\Users\Public\Documents\$VHDName.vhd"
 
 #Detect if Hyper-V is installed
-if ((Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V-All -Online).State -ne 'Enabled') {
+if ((Get-WindowsFeature -Name 'Hyper-V').InstallState -ne 'Installed') {
     Write-Log -Entry "Hyper-V Role and/or required PowerShell module is not installed, please install before running this script..."
-    return
+    Exit
 }
 else {
     Write-Log -Entry "Hyper-V Role is installed, continuing..."
