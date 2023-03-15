@@ -287,15 +287,21 @@ try {
         $shareName = "TestShare"
         $directoryPath = "C:\$shareName"
         $fullAccessUsers = "Everyone"
-        $readAccessUsers = "Everyone"
         $numFiles = 3  # Change this to the number of files you want to create
         $maxFileSize = 1MB  # Change this to the maximum file size you want to create
+
+        # Share parameters
+        $Parameters = @{
+            Name = $shareName
+            Path = $directoryPath
+            FullAccess = $fullAccessUsers
+        }
 
         # Create directory
         New-Item -ItemType Directory -Path $directoryPath
 
         # Set up SMB share
-        New-SmbShare -Name $shareName -Path $directoryPath -FullAccess $fullAccessUsers -ReadAccess $readAccessUsers
+        New-SmbShare @Parameters
 
         # Create random files
         $random = New-Object System.Random
