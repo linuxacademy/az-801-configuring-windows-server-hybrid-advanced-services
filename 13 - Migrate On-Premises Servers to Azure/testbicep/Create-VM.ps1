@@ -2,7 +2,7 @@ param(
     $UserName,
     $Password,
     $ParentVHDPath,
-    $VM = 'nestedVM2',
+    $VM,
     $IP = '10.2.1.2',
     $Prefix = '24',
     $DefaultGateway = '10.2.1.1',
@@ -32,45 +32,6 @@ function Wait-VMPowerShellReady ($VM, $Credential) {
 #Start a stopwatch to measure the deployment time
 $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-# # Find Windows VHDs
-# $urls = @(
-#     'https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019'
-# )
-
-# # Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
-# $totalfound = foreach ($url in $urls) {
-#     try {
-#         Write-Log -Entry "Parsing for VHD at url - $url"
-#         $content = Invoke-WebRequest -Uri $url -ErrorAction Stop
-#         $downloadlinks = $content.links | Where-Object { `
-#                 $_.'aria-label' -match 'Download' `
-#                 -and $_.'aria-label' -match 'VHD'
-#         }
-#         $count = $DownloadLinks.href.Count
-#         $totalcount += $count
-#         Write-Log -Entry "Processing $url, Found $count Download(s)..."
-#         foreach ($DownloadLink in $DownloadLinks) {
-#             [PSCustomObject]@{
-#                 Name   = $DownloadLink.'aria-label'.Replace('Download ', '')
-#                 Tag    = $DownloadLink.'data-bi-tags'.Split('"')[3].split('-')[0]
-#                 Format = $DownloadLink.'data-bi-tags'.Split('-')[1].ToUpper()
-#                 Link   = $DownloadLink.href
-#             }
-#             Write-Log -Entry "Found VHD Image"
-#         }
-#     }
-#     catch {
-#         Write-Log -Entry "$url is not accessible"
-#         return
-#     }
-# }
-
-# # Download Information to pass to Create-VM.ps1
-# $VHDLink = $totalfound.Link
-# $VHDName = $totalfound.Name.Split('-')[0]
-# $VHDName = $VHDName.Replace(' ', '-')
-# $ParentVHDPath = "C:\Users\Public\Documents\$VHDName.vhd"
-
 #Detect if Hyper-V is installed
 if ((Get-WindowsFeature -Name 'Hyper-V').InstallState -ne 'Installed') {
     Write-Log -Entry "Hyper-V Role and/or required PowerShell module is not installed, please install before running this script..."
@@ -80,15 +41,6 @@ else {
     Write-Log -Entry "Hyper-V Role is installed, continuing..."
     Write-Log -Entry $_
 }
-
-# # Download VHDLink
-# try {
-#     Invoke-WebRequest -Uri "$VHDLink" -OutFile "$ParentVHDPath"
-#     Write-Log -Entry "Successful Download - $ParentVHDPath"
-# }
-# catch {
-#     Write-Log -Entry "Failed to Download - $ParentVHDPath"
-# }
 
 # Import Hyper-V Module
 try {
@@ -213,7 +165,6 @@ catch {
     Exit
 }
 
-
 # Wait for the VM to be ready, rename-VM and configure IP Addressing
 try {
     Write-Log -Entry "VM Customization Start"
@@ -244,12 +195,8 @@ try {
         Write-Log -Entry $_
         Exit
     }
-    # # Wait for Unattend to run
-    # Wait-VMPowerShellReady -VM $VM -Credential $Credential
-    # Write-Log -Entry "$($VM) PowerShell is ready"
 
     # Configure IP addresssing
-    # IP
     try {
         Invoke-Command -ScriptBlock { New-NetIPAddress -IPAddress $using:IP -PrefixLength $using:Prefix -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -DefaultGateway $using:DefaultGateway | Out-Null } -VMName $VM -Credential $Credential
         Write-Log -Entry "Update $($VM) IP - Success"
@@ -259,7 +206,7 @@ try {
         Write-Log -Entry $_
         Exit
     }
-    # DNS
+    # Configure DNS
     try {
         Invoke-Command -ScriptBlock { Set-DnsClientServerAddress -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -ServerAddresses $using:DNSServers | Out-Null } -VMName $VM -Credential $Credential
         Write-Log -Entry "Update $($VM) DNS - Success"
@@ -278,61 +225,6 @@ try {
     catch {
         Write-Log -Entry "Update $($VM) Name - Failed"
         Write-Log -Entry $_
-        Exit
-    }
-
-    # Command to run in guest vm
-    $command = {
-        # Define variables
-        $shareName = "TestShare"
-        $directoryPath = "C:\$shareName"
-        $fullAccessUsers = "Everyone"
-        $numFiles = 3  # Change this to the number of files you want to create
-        $maxFileSize = 1MB  # Change this to the maximum file size you want to create
-
-        # Share parameters
-        $Parameters = @{
-            Name = $shareName
-            Path = $directoryPath
-            FullAccess = $fullAccessUsers
-        }
-
-        # Create directory
-        New-Item -ItemType Directory -Path $directoryPath
-
-        # Set up SMB share
-        New-SmbShare @Parameters
-
-        # Create random files
-        $random = New-Object System.Random
-        for ($i = 1; $i -le $numFiles; $i++) {
-            $fileName = "File$i.txt"
-            $filePath = Join-Path $directoryPath $fileName
-            $fileSize = $random.Next(1, $maxFileSize)
-            $fileStream = New-Object IO.FileStream($filePath, [IO.FileMode]::Create)
-            $fileStream.SetLength($fileSize)
-            $fileStream.Close()
-        }
-    }
-    # Setup File Share on Guest
-    try {
-        Write-Log -Entry "Configure share on Hyper-V Guest VM - Attempting..."
-        Invoke-Command -ScriptBlock $command -VMName $VM -Credential $Credential
-        Write-Log -Entry "Configure share on Hyper-V Guest VM - Success"
-    }
-    catch {
-        Write-Log -Entry "Configure share on Hyper-V Guest VM - Failed"
-        Exit
-    }
-
-    # Resize guest VM display settings
-    try {
-        Invoke-Command -ScriptBlock { Set-DisplayResolution -Width 1024 -Height 768 -Force } -VMName $VM -Credential $Credential
-        Write-Log -Entry "Resize display settings on $($VM) - Success"
-    }
-    catch {
-        Write-Log -Entry "Resize display settings on $($VM) - Failed"
-        Write-Log $_
         Exit
     }
 
@@ -362,6 +254,62 @@ try {
 catch {
     Write-Log -Entry "Readiness Check $($VM) - Failed"
     Write-Log -Entry $_
+    Exit
+}
+
+# Command to run in guest vm
+$command = {
+    # Define variables
+    $shareName = "TestShare"
+    $directoryPath = "C:\$shareName"
+    $fullAccessUsers = "Everyone"
+    $numFiles = 3  # Change this to the number of files you want to create
+    $maxFileSize = 1MB  # Change this to the maximum file size you want to create
+
+    # Share parameters
+    $Parameters = @{
+        Name = $shareName
+        Path = $directoryPath
+        FullAccess = $fullAccessUsers
+    }
+
+    # Create directory
+    New-Item -ItemType Directory -Path $directoryPath
+
+    # Set up SMB share
+    New-SmbShare @Parameters
+
+    # Create random files
+    $random = New-Object System.Random
+    for ($i = 1; $i -le $numFiles; $i++) {
+        $fileName = "File$i.txt"
+        $filePath = Join-Path $directoryPath $fileName
+        $fileSize = $random.Next(1, $maxFileSize)
+        $fileStream = New-Object IO.FileStream($filePath, [IO.FileMode]::Create)
+        $fileStream.SetLength($fileSize)
+        $fileStream.Close()
+    }
+}
+
+# Setup File Share on Guest
+try {
+    Write-Log -Entry "Configure share on Hyper-V Guest VM - Attempting..."
+    Invoke-Command -ScriptBlock $command -VMName $VM -Credential $Credential
+    Write-Log -Entry "Configure share on Hyper-V Guest VM - Success"
+}
+catch {
+    Write-Log -Entry "Configure share on Hyper-V Guest VM - Failed"
+    Exit
+}
+
+# Resize guest VM display settings
+try {
+    Invoke-Command -ScriptBlock { Set-DisplayResolution -Width 1024 -Height 768 -Force } -VMName $VM -Credential $Credential
+    Write-Log -Entry "Resize display settings on $($VM) - Success"
+}
+catch {
+    Write-Log -Entry "Resize display settings on $($VM) - Failed"
+    Write-Log $_
     Exit
 }
 
