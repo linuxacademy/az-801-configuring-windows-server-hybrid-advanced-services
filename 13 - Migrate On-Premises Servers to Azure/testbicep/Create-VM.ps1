@@ -18,15 +18,13 @@ $LogFile = Join-Path -Path $AllUsersDesktop -ChildPath "$($VM)-Labsetup.log"
 function Write-Log ($Entry, $Path = $LogFile) {
     Add-Content -Path $LogFile -Value "$((Get-Date).ToShortDateString()) $((Get-Date).ToShortTimeString()): $($Entry)" 
 } 
-function Wait-VMReady ($VM)
-{
+function Wait-VMReady ($VM) {
     while ((Get-VM $VM | Select-Object -ExpandProperty Heartbeat) -notlike "Ok*") {
         Start-Sleep -Seconds 1
     }
 }
-function Wait-VMPowerShellReady ($VM, $Credential)
-{
-    while (-not (Invoke-Command -ScriptBlock {Get-ComputerInfo} -VMName $VM -Credential $Credential -ErrorAction SilentlyContinue)) {
+function Wait-VMPowerShellReady ($VM, $Credential) {
+    while (-not (Invoke-Command -ScriptBlock { Get-ComputerInfo } -VMName $VM -Credential $Credential -ErrorAction SilentlyContinue)) {
         Start-Sleep -Seconds 1
     }
 }
@@ -93,11 +91,11 @@ else {
 # }
 
 # Import Hyper-V Module
-try{
+try {
     Import-Module Hyper-V
     Write-Log -Entry "Imported Hyper-V Module Successfully"
 }
-catch{
+catch {
     Write-Log -Entry "Failed to Import Hyper-V Module"
     Write-Log -Entry $_
     Exit
@@ -110,7 +108,7 @@ while (-not(Get-VMHost -ErrorAction SilentlyContinue)) {
 
 # Create NAT Virtual Switch
 Write-Log -Entry "VM Creation Start"
-try{
+try {
     if (-not(Get-VMSwitch -Name "InternalvSwitch" -ErrorAction SilentlyContinue)) {
         Write-Log -Entry "Create Virtual Switch Start"
         New-VMSwitch -Name 'InternalvSwitch' -SwitchType 'Internal'
@@ -118,7 +116,8 @@ try{
         Get-NetAdapter "vEthernet (InternalvSwitch)" | New-NetIPAddress -IPAddress 10.2.1.1 -AddressFamily IPv4 -PrefixLength 24
         Write-Log -Entry "Create Virtual Switch Success"
     }
-} catch {
+}
+catch {
     Write-Log -Entry "Create Virtual Switch Failed. Please contact Support."
     Write-Log $_
     Exit
@@ -129,7 +128,8 @@ try {
     Write-Log -Entry "Create VHD Start"
     New-VHD -ParentPath "$ParentVHDPath" -Path "C:\Temp\$($VM).vhd" -Differencing
     Write-Log -Entry "Create VHD Success"
-} catch {
+}
+catch {
     Write-Log -Entry "Create VHD Failed. Please contact support."
     Write-Log -Entry $_
     Exit
@@ -251,7 +251,7 @@ try {
     # Configure IP addresssing
     # IP
     try {
-        Invoke-Command -ScriptBlock {New-NetIPAddress -IPAddress $using:IP -PrefixLength $using:Prefix -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -DefaultGateway $using:DefaultGateway | Out-Null} -VMName $VM -Credential $Credential
+        Invoke-Command -ScriptBlock { New-NetIPAddress -IPAddress $using:IP -PrefixLength $using:Prefix -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -DefaultGateway $using:DefaultGateway | Out-Null } -VMName $VM -Credential $Credential
         Write-Log -Entry "Update $($VM) IP - Success"
     }
     catch {
@@ -261,7 +261,7 @@ try {
     }
     # DNS
     try {
-        Invoke-Command -ScriptBlock {Set-DnsClientServerAddress -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -ServerAddresses $using:DNSServers | Out-Null} -VMName $VM -Credential $Credential
+        Invoke-Command -ScriptBlock { Set-DnsClientServerAddress -InterfaceAlias (Get-NetIPInterface -InterfaceAlias "*Ethernet*" -AddressFamily IPv4 | Select-Object -Expand InterfaceAlias) -ServerAddresses $using:DNSServers | Out-Null } -VMName $VM -Credential $Credential
         Write-Log -Entry "Update $($VM) DNS - Success"
     }
     catch {
@@ -272,13 +272,46 @@ try {
     
     # Rename VM
     try {
-        Invoke-Command -ScriptBlock {Rename-Computer -NewName $using:VM -Restart:$false} -VMName $VM -Credential $Credential
+        Invoke-Command -ScriptBlock { Rename-Computer -NewName $using:VM -Restart:$false } -VMName $VM -Credential $Credential
         Write-Log -Entry "Update $($VM) Name - Success"
     }
     catch {
         Write-Log -Entry "Update $($VM) Name - Failed"
         Write-Log -Entry $_
         Exit
+    }
+
+    # Setup File Share on Guest
+    try {
+        Write-Log -Entry "Configure share on Hyper-V Guest VM - Attempting..."
+        # Define variables
+        $shareName = "TestShare"
+        $directoryPath = "C:\$shareName"
+        $fullAccessUsers = "Everyone"
+        $readAccessUsers = "Everyone"
+        $numFiles = 3  # Change this to the number of files you want to create
+        $maxFileSize = 1MB  # Change this to the maximum file size you want to create
+
+        # Create directory
+        New-Item -ItemType Directory -Path $directoryPath
+
+        # Set up SMB share
+        New-SmbShare -Name $shareName -Path $directoryPath -FullAccess $fullAccessUsers -ReadAccess $readAccessUsers
+
+        # Create random files
+        $random = New-Object System.Random
+        for ($i = 1; $i -le $numFiles; $i++) {
+            $fileName = "File$i.txt"
+            $filePath = Join-Path $directoryPath $fileName
+            $fileSize = $random.Next(1, $maxFileSize)
+            $fileStream = New-Object IO.FileStream($filePath, [IO.FileMode]::Create)
+            $fileStream.SetLength($fileSize)
+            $fileStream.Close()
+        }
+        Write-Log -Entry "Configure share on Hyper-V Guest VM - Success"
+    }
+    catch {
+        Write-Log -Entry "Configure share on Hyper-V Guest VM - Failed"
     }
 
     # Restart VM
