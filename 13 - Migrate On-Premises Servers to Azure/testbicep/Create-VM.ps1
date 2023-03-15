@@ -336,6 +336,16 @@ try {
         Exit
     }
     
+    # Resize guest VM display settings
+    try {
+        Invoke-Command -ScriptBlock { Set-DisplayResolution -Width 1024 -Height 768 -Force } -VMName $VM -Credential $Credential
+        Write-Log -Entry "Resize display settings on $($VM) - Success"
+    }
+    catch {
+        Write-Log -Entry "Resize display settings on $($VM) - Failed"
+        Write-Log $_
+    }
+    
     Write-Log -Entry "VM Customization Success"
 }
 catch {
