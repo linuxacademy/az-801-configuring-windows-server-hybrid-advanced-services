@@ -167,6 +167,7 @@ try{
 catch {
     Write-Log -Entry "Download VHD - $VHDLink - Failed"
     Write-Log -Entry "$_"
+    Exit
 }
 
 
@@ -184,6 +185,7 @@ try {
         catch {
             Write-Log -Entry "Scheduled task creation for $VM - Failure"
             Write-Log -Entry $_
+            Exit
         }
         try {
             # Create scheduled task trigger
@@ -195,6 +197,7 @@ try {
         catch {
             Write-Log -Entry "Scheduled task creation for $VM - Failure"
             Write-Log -Entry $_
+            Exit
         }
         try {
             Write-Log -Entry "Scheduled task registration for $VM - Processing..."
@@ -204,6 +207,7 @@ try {
         catch {
             Write-Log -Entry "Scheduled task registration for $VM - Failure"
             Write-Log -Entry $_
+            Exit
         }
     }
     Write-Log -Entry "Creating loop - Success"
@@ -211,6 +215,7 @@ try {
 catch {
     Write-Log -Entry "Creating loop - Failure"
     Write-Log $_
+    Exit
 }
 
 # Install Hyper-V
@@ -223,6 +228,7 @@ try{
 catch{
     Write-Log -Entry "Install Hyper-V - Failure"
     Write-Log $_
+    Exit
 }
 
 #Restart the Server
@@ -234,4 +240,5 @@ try {
 catch {
     Write-Log -Entry "Restart server - Failure"
     Write-Log -Entry $_
+    Exit
 }
