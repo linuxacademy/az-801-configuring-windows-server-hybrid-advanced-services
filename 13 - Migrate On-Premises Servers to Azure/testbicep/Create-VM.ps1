@@ -344,6 +344,7 @@ try {
     catch {
         Write-Log -Entry "Resize display settings on $($VM) - Failed"
         Write-Log $_
+        Exit
     }
     
     Write-Log -Entry "VM Customization Success"
