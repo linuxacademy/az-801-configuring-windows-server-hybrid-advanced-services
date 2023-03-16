@@ -331,6 +331,24 @@ catch {
     Write-Log -Entry "Disable IEESC on $VM - Failed"
 }
 
+# Fix Server UI
+$command = {
+    Get-ScheduledTask -TaskName ServerManager | Disable-ScheduledTask -Verbose
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "HideClock" -Value 1
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "DisableNotificationCenter" -Value 1
+    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" -Name "HideSCAVolume" -Value 1
+}
+try {
+    Write-Log -Entry "Fix server UI - Processing..."
+    Invoke-Command -ScriptBlock { $command } -VMName $VM -Credential $Credential
+    Write-Log -Entry "Fixed server UI - Success" 
+}
+catch {
+    Write-Log -Entry "Fixed server UI - Failure"
+    Write-Log $_
+}
+
+
 #The end, stop stopwatch and display the time that it took to deploy
 $stopwatch.Stop()
 $hours = $stopwatch.Elapsed.Hours
