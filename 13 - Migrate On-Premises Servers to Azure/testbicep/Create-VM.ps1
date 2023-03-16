@@ -322,8 +322,6 @@ $command = {
     Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
 
     Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
-
-    Stop-Process -Name explorer
 }
 try {
     Invoke-Command -ScriptBlock { $command } -VMName $VM -Credential $Credential

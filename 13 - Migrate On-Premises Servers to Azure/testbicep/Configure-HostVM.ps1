@@ -27,8 +27,6 @@ function Disable-IEESC {
 
     Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
 
-    Stop-Process -Name explorer
-
 }
 
 # Diable IEESC
