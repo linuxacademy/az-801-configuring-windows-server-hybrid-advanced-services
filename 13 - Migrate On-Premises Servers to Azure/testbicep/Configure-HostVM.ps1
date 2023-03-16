@@ -86,6 +86,8 @@ $AzMigAppFilePath = "$($AllUsersDesktop)\azMigApp.zip"
 try {
     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Processing..."
     Invoke-WebRequest -uri $AzMigAppUrl -OutFile $AzMigAppFilePath
+    # Unzip download to public desktop
+    Expand-Archive -LiteralPath $AzMigAppFilePath -DestinationPath $AllUsersDesktop
     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Success"
 }
 catch {
