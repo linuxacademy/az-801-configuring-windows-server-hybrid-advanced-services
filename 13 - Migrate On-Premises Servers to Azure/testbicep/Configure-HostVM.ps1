@@ -27,7 +27,7 @@ function Disable-IEESC {
 
     Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
 
-    Stop-Process -Name Explorer
+    Stop-Process -Name explorer
 
 }
 
@@ -83,11 +83,11 @@ catch {
 }
 
 # Download the Azure Migrate Appliance VHD
-$DefaultDownloadPath = $AllUsersDesktop
 $AzMigAppUrl = 'https://go.microsoft.com/fwlink/?linkid=2191848'
+$AzMigAppFilePath = "$($AllUsersDesktop)\azMigApp.zip"
 try {
     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Processing..."
-    Invoke-WebRequest -uri $AzMigAppUrl -OutFile $DefaultDownloadPath
+    Invoke-WebRequest -uri $AzMigAppUrl -OutFile $AzMigAppFilePath
     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Success"
 }
 catch {
