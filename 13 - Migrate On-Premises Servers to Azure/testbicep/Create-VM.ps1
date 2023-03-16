@@ -147,7 +147,7 @@ catch {
 try {
     Write-Log -Entry "Create and Start VM Start"
     # Create Virtual Machine
-    New-VM -Name "$($VM)" -Generation 1 -MemoryStartupBytes 2GB -VHDPath "C:\Temp\$($VM).vhd" -SwitchName 'InternalvSwitch'
+    New-VM -Name "$($VM)" -Generation 1 -MemoryStartupBytes 1500MB -VHDPath "C:\Temp\$($VM).vhd" -SwitchName 'InternalvSwitch'
     Set-VMProcessor "$($VM)" -Count 2
     Set-VMProcessor "$($VM)" -ExposeVirtualizationExtensions $true
 
