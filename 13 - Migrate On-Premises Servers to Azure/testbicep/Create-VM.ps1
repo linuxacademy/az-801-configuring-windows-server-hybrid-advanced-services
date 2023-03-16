@@ -328,8 +328,9 @@ catch {
     Exit
 }
 
+$command = Disable-IEESC
 try {
-    Invoke-Command -ScriptBlock { Disable-IEESC } -VMName $VM -Credential $Credential
+    Invoke-Command -ScriptBlock { $command } -VMName $VM -Credential $Credential
     Write-Log -Entry "Disable IEESC on $VM - Success"
 }
 catch {
