@@ -268,8 +268,8 @@ $command = {
 
     # Share parameters
     $Parameters = @{
-        Name = $shareName
-        Path = $directoryPath
+        Name       = $shareName
+        Path       = $directoryPath
         FullAccess = $fullAccessUsers
     }
 

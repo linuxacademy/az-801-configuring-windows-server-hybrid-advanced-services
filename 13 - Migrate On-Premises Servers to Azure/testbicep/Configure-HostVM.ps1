@@ -1,4 +1,4 @@
- param(
+param(
     $UserName,
     $Password,
     $HostVMName
@@ -19,70 +19,20 @@ function Write-Log ($Entry, $Path = $LogFile) {
 # Function to disable IEESC
 function Disable-IEESC {
 
-$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
+    $AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}"
 
-$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
+    $UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}"
 
-Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
+    Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0
 
-Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
+    Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0
 
-Stop-Process -Name Explorer
+    Stop-Process -Name Explorer
 
 }
 
-# # Check script for psboundparams
-# function Get-ScriptParameters {
-#     [CmdletBinding()]
-#     param()
-
-#     Write-Log -Entry "Get-ScriptParameters - Processing..."
-#     Write-Log -Entry "PSBoundParameters.Count: $($PSBoundParameters.Count)"
-
-#     if ($PSBoundParameters.Count -gt 0) {
-#         foreach ($key in $PSBoundParameters.Keys) {
-#             Write-Log -Entry "Parameter name: $key"
-#             Write-Log -Entry "Parameter value: $($PSBoundParameters[$key])"
-#             Write-Log -Entry "Object type: $([Type]::GetType($PSBoundParameters[$key]))"
-#         }
-#     }
-#     else {
-#         Write-Log -Entry "No parameters were passed to the script"
-#     }
-# }
-
-# try{
-#     $ScriptParameters = $($PSBoundParameters)
-#     Write-Log "Get PSBoundParameters - Processing..."
-#     Write-Log -Entry "Bound Paramertes - $ScriptParameters"
-#     if ($ScriptParameters.Count -gt 0) {
-#         foreach ($key in $ScriptParameters.Keys) {
-#             Write-Log -Entry "Getting Parameter..."
-#             Write-Log -Entry "Parameter name: $key"
-#             Write-Log -Entry "Parameter value: $($ScriptParameter[$key])"
-#             Write-Log -Entry "Object Type: $([Type]::GetType($ScriptParameters[$key]))"
-#         }
-#     }
-#     Write-Log -Entry "Parmeters counted - $($PSBoundParameters.Count)"
-# }
-# catch{
-#     Write-Log -Entry "Get PSBoundParemeters - Failed"
-#     Write-Log -Entry $_
-# }
-
-# # Check script for parameters, param value, and param object type
-# try{
-#     Write-Log -Entry "Parameter check - Processing..."
-#     Get-ScriptParameters
-#     Write-Log -Entry "Parameter check - Success"
-# }
-# catch{
-#     Write-Log -Entry "Parameter check - Failure"
-#     Write-Log -Entry $_
-# }
-
 # Diable IEESC
-try{
+try {
     Write-Log -Entry "Disable IEESC - Processing..."
     Disable-IEESC
     Write-Log -Entry "Disabled IEESC - Success"
@@ -105,7 +55,7 @@ catch {
     Write-Log $_
 }
 
-#Download Scripts
+#Download HyperV VM Creation Scripts
 try {
     Write-Log -Entry "Download HyperV VM creation script - Processing..."
     New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
@@ -117,49 +67,11 @@ catch {
     Write-Log $_
 }
 
-# # Find Windows VHDs
-# $urls = @(
-#     'https://www.microsoft.com/en-us/evalcenter/download-windows-server-2019'
-# )
 
-# # Loop through the urls, search for VHD download links and add to totalfound array and display number of downloads
-# $totalfound = foreach ($url in $urls) {
-#     try {
-#         $content = Invoke-WebRequest -Uri $url
-#         $downloadlinks = $content.links | Where-Object { `
-#                 $_.'aria-label' -match 'Download' `
-#                 -and $_.'aria-label' -match 'VHD'
-#         }
-#         $count = $DownloadLinks.href.Count
-#         $totalcount += $count
-#         Write-Log -Entry "Processing $url, Found $count Download(s)..."
-#         foreach ($DownloadLink in $DownloadLinks) {
-#             [PSCustomObject]@{
-#                 Name   = $DownloadLink.'aria-label'.Replace('Download ', '')
-#                 Tag    = $DownloadLink.'data-bi-tags'.Split('"')[3].split('-')[0]
-#                 Format = $DownloadLink.'data-bi-tags'.Split('-')[1].ToUpper()
-#                 Link   = $DownloadLink.href
-#             }
-#             Write-Log -Entry "Found VHD Image"
-#         }
-#     }
-#     catch {
-#         Write-Log -Entry "$url is not accessible"
-#         return
-#     }
-# }
-
-
-# # Download Information to pass to Create-VM.ps1
-# $VHDLink = $totalfound.Link
-# $VHDName = $totalfound.Name.Split('-')[0]
-# $VHDName = $VHDName.Replace(' ', '-')
-# $ParentVHDPath = "C:\Users\Public\Documents\$VHDName.vhd"
-
+# Download the 2019 Windows Server Datacenter Eval edition
 $VHDLink = 'https://go.microsoft.com/fwlink/p/?linkid=2195334&clcid=0x409&culture=en-us&country=us'
 $ParentVHDPath = 'C:\Users\Public\Documents\win-2019-64.vhd'
-
-try{
+try {
     Write-Log -Entry "Download VHD - $VHDLink - Processing..."
     Invoke-WebRequest -Uri $VHDLink -OutFile $ParentVHDPath
     Write-Log -Entry "Download VHD - $VHDLink - Success"
@@ -170,6 +82,19 @@ catch {
     Exit
 }
 
+# Download the Azure Migrate Appliance VHD
+$DefaultDownloadPath = $AllUsersDesktop
+$AzMigAppUrl = 'https://go.microsoft.com/fwlink/?linkid=2191848'
+try {
+    Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Processing..."
+    Invoke-WebRequest -uri $AzMigAppUrl -OutFile $DefaultDownloadPath
+    Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Success"
+}
+catch {
+    Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Failed"
+    Write-Log -Entry "$_"
+    Exit
+}
 
 # VM Scheduled Task Creation Loop
 try {
@@ -219,13 +144,13 @@ catch {
 }
 
 # Install Hyper-V
-try{
+try {
     Write-Log -Entry "Install Hyper-V - Processing..."
     Install-WindowsFeature -Name Hyper-V -IncludeAllSubFeature -IncludeManagementTools
     # Add-WindowsFeature Hyper-V -IncludeManagementTools
     Write-Log -Entry "Install Hyper-V - Success"
 }
-catch{
+catch {
     Write-Log -Entry "Install Hyper-V - Failure"
     Write-Log $_
     Exit
