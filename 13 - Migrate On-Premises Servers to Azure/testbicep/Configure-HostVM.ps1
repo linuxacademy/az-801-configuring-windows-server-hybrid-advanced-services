@@ -110,6 +110,20 @@ catch {
     Exit
 }
 
+# Download Az Migrate Appliance PowerShell Config Script
+$AzMigAppConfPwshUrl = 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Configure-AzMigrateAppliance.ps1'
+$AzMigAppConfPwshPath = "$($AllUsersDesktop)\Configure-AzMigrateAppliance.ps1"
+try {
+    Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Processing..."
+    Invoke-WebRequest -Uri $AzMigAppConfPwshUrl -OutFile $AzMigAppConfPwshPath
+    Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Success"
+}
+catch {
+    Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Failed"
+    Write-Log -Entry "$_"
+    Exit
+}
+
 # VM Scheduled Task Creation Loop
 try {
     Write-Log -Entry "Creating loop - Processing..."
