@@ -27,6 +27,27 @@ function Wait-VMPowerShellReady ($VM, $Credential) {
     }
 }
 
+# Start the VM
+try {
+    Start-VM -VMName "$($VM)" 
+    Write-Log -Entry "Start the VM - Success"
+}
+catch {
+    Write-Log -Entry "Start the VM - Failed"
+    Write-Log -Entry "$_"
+    Exit
+}
+# Wait for the VM to be ready
+try {
+    Wait-VMReady -VM $VM
+    Write-Log -Entry "Readiness Check $($VM) - Success"
+}
+catch {
+    Write-Log -Entry "Readiness Check $($VM) - Failed"
+    Write-Log -Entry $_
+    Exit
+}
+
 # Wait for the VM to be ready, rename-VM and configure IP Addressing
 try {
     Write-Log -Entry "VM Customization Start"
