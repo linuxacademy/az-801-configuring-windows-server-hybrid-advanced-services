@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "2670324850868134293"
+      "templateHash": "12147782261451549804"
     }
   },
   "parameters": {
@@ -23,7 +23,7 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2019-11-01",
-      "name": "vnet-az801",
+      "name": "vnet-src-az801",
       "location": "[variables('location')]",
       "properties": {
         "addressSpace": {
@@ -33,7 +33,7 @@
         },
         "subnets": [
           {
-            "name": "server-subnet",
+            "name": "SharedServicesSubnet",
             "properties": {
               "addressPrefix": "10.0.0.0/24",
               "networkSecurityGroup": {
@@ -52,6 +52,27 @@
       "dependsOn": [
         "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-az801')]"
       ]
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2019-11-01",
+      "name": "vnet-dest-az801",
+      "location": "[variables('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.1.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "SharedServicesSubnet",
+            "properties": {
+              "addressPrefix": "10.1.0.0/24"
+            }
+          }
+        ]
+      }
     },
     {
       "type": "Microsoft.Network/networkSecurityGroups",
@@ -105,7 +126,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-az801')]"
               },
               "subnet": {
-                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-az801'), '2019-11-01').subnets[0].id]"
+                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-src-az801'), '2019-11-01').subnets[0].id]"
               }
             }
           }
@@ -113,7 +134,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-az801')]",
-        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-az801')]"
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-src-az801')]"
       ]
     },
     {
@@ -163,7 +184,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2020-12-01",
-      "name": "[format('{0}/{1}', 'vm-az801', 'vm-az801-CSE')]",
+      "name": "[format('{0}/{1}', 'vm-az801', 'cse-vm-az801')]",
       "location": "[variables('location')]",
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -212,7 +233,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-az801-bastion')]"
               },
               "subnet": {
-                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-az801'), '2019-11-01').subnets[1].id]"
+                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-src-az801'), '2019-11-01').subnets[1].id]"
               }
             }
           }
@@ -220,7 +241,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-az801-bastion')]",
-        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-az801')]"
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-src-az801')]"
       ]
     }
   ]
