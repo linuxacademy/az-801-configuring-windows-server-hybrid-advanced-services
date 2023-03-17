@@ -117,7 +117,7 @@ resource vm_az801 'Microsoft.Compute/virtualMachines@2020-12-01' = {
   location: location
   properties: {
     hardwareProfile: {
-      vmSize: 'standard_d2s_v3'
+      vmSize: 'standard_d8s_v3'
     }
     osProfile: {
       computerName: 'vm-hq-az801-01'
