@@ -85,13 +85,27 @@ $AzMigAppUrl = 'https://go.microsoft.com/fwlink/?linkid=2191848'
 $AzMigAppFilePath = "$($AllUsersDesktop)\azMigApp.zip"
 try {
     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Processing..."
-    Invoke-WebRequest -uri $AzMigAppUrl -OutFile $AzMigAppFilePath
+    Invoke-WebRequest -Uri $AzMigAppUrl -OutFile $AzMigAppFilePath
     # Unzip download to public desktop
     Expand-Archive -LiteralPath $AzMigAppFilePath -DestinationPath $AllUsersDesktop
     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Success"
 }
 catch {
     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Failed"
+    Write-Log -Entry "$_"
+    Exit
+}
+
+# Download Azure Site Recovery Provider .exe
+$AzSiteRecoveryExeUrl = 'https://aka.ms/downloaddra_eus'
+$AzSiteRecoveryExeFilePath = "$($AllUsersDesktop)\AzureSiteRecoveryProvider.exe"
+try {
+    Write-Log -Entry "Download Azure Site Recovery for Replication - Processsing..."
+    Invoke-WebRequest -Uri $AzSiteRecoveryExeUrl -OutFile $AzSiteRecoveryExeFilePath
+    Write-Log -Entry "Download Azure Site Recovery for Replication - Success"
+}
+catch {
+    Write-Log -Entry "Download Azure Site Recovery for Replication - Failed"
     Write-Log -Entry "$_"
     Exit
 }
