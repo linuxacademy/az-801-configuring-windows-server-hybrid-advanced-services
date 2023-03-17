@@ -1,5 +1,7 @@
 param(
+    [Parameter(Mandatory=$true)]
     $Password,
+    [Parameter(Mandatory=$true)]
     $VM,
     $IP = '10.2.1.3',
     $Prefix = '24',
