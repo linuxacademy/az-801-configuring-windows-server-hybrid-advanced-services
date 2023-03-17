@@ -154,7 +154,7 @@ resource vm_az801 'Microsoft.Compute/virtualMachines@2020-12-01' = {
 
 resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' = {
   parent: vm_az801
-  name: 'vm-az801-CSE'
+  name: 'cse-vm-az801'
   location: location
   properties: {
     publisher: 'Microsoft.Compute'
