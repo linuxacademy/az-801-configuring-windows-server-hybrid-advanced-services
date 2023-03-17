@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "12147782261451549804"
+      "templateHash": "11701082685720427486"
     }
   },
   "parameters": {
@@ -23,7 +23,7 @@
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2019-11-01",
-      "name": "vnet-src-az801",
+      "name": "vnet-hq-az801-01",
       "location": "[variables('location')]",
       "properties": {
         "addressSpace": {
@@ -37,7 +37,7 @@
             "properties": {
               "addressPrefix": "10.0.0.0/24",
               "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-az801')]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-hq-az801-01')]"
               }
             }
           },
@@ -50,13 +50,13 @@
         ]
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-az801')]"
+        "[resourceId('Microsoft.Network/networkSecurityGroups', 'nsg-hq-az801-01')]"
       ]
     },
     {
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion": "2019-11-01",
-      "name": "vnet-dest-az801",
+      "name": "vnet-azure-az801-01",
       "location": "[variables('location')]",
       "properties": {
         "addressSpace": {
@@ -77,7 +77,7 @@
     {
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2019-11-01",
-      "name": "nsg-az801",
+      "name": "nsg-hq-az801-01",
       "location": "[variables('location')]",
       "properties": {
         "securityRules": [
@@ -101,7 +101,7 @@
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2019-11-01",
-      "name": "pip-az801",
+      "name": "pip-hq-az801-01",
       "location": "[variables('location')]",
       "sku": {
         "name": "Standard"
@@ -113,41 +113,41 @@
     {
       "type": "Microsoft.Network/networkInterfaces",
       "apiVersion": "2020-11-01",
-      "name": "nic-az801",
+      "name": "nic-hq-az801-01",
       "location": "[variables('location')]",
       "properties": {
         "ipConfigurations": [
           {
-            "name": "nic-az801-IPConfig1",
+            "name": "IPConfig1",
             "properties": {
               "privateIPAllocationMethod": "Static",
               "privateIPAddress": "10.0.0.5",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-az801')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-hq-az801-01')]"
               },
               "subnet": {
-                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-src-az801'), '2019-11-01').subnets[0].id]"
+                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-hq-az801-01'), '2019-11-01').subnets[0].id]"
               }
             }
           }
         ]
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-az801')]",
-        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-src-az801')]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-hq-az801-01')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-hq-az801-01')]"
       ]
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2020-12-01",
-      "name": "vm-az801",
+      "name": "vm-hq-az801-01",
       "location": "[variables('location')]",
       "properties": {
         "hardwareProfile": {
           "vmSize": "standard_d2s_v3"
         },
         "osProfile": {
-          "computerName": "vm-az801",
+          "computerName": "vm-hq-az801-01",
           "adminUsername": "[parameters('vmUserName')]",
           "adminPassword": "[parameters('vmPassword')]"
         },
@@ -159,7 +159,7 @@
             "version": "latest"
           },
           "osDisk": {
-            "name": "vm-az801-OSDisk",
+            "name": "vm-hq-az801-OSDisk",
             "caching": "ReadWrite",
             "createOption": "FromImage"
           }
@@ -167,7 +167,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'nic-az801')]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', 'nic-hq-az801-01')]"
             }
           ]
         },
@@ -178,13 +178,13 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/networkInterfaces', 'nic-az801')]"
+        "[resourceId('Microsoft.Network/networkInterfaces', 'nic-hq-az801-01')]"
       ]
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "apiVersion": "2020-12-01",
-      "name": "[format('{0}/{1}', 'vm-az801', 'cse-vm-az801')]",
+      "name": "[format('{0}/{1}', 'vm-hq-az801-01', 'cse-vm-hq-az801-01')]",
       "location": "[variables('location')]",
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -195,17 +195,17 @@
           "fileUris": [
             "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Configure-HostVM.ps1"
           ],
-          "commandToExecute": "[format('powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName \"{0}\" -Password \"{1}\" -HostVMName \"{2}\"', parameters('vmUserName'), parameters('vmPassword'), 'vm-az801')]"
+          "commandToExecute": "[format('powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName \"{0}\" -Password \"{1}\" -HostVMName \"{2}\"', parameters('vmUserName'), parameters('vmPassword'), 'vm-hq-az801-01')]"
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', 'vm-az801')]"
+        "[resourceId('Microsoft.Compute/virtualMachines', 'vm-hq-az801-01')]"
       ]
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-11-01",
-      "name": "pip-az801-bastion",
+      "name": "pip-hq-az801-bastion-01",
       "location": "[variables('location')]",
       "sku": {
         "name": "Standard"
@@ -218,7 +218,7 @@
     {
       "type": "Microsoft.Network/bastionHosts",
       "apiVersion": "2020-11-01",
-      "name": "b59-bastion",
+      "name": "bastion-hq-az801-01",
       "location": "[variables('location')]",
       "sku": {
         "name": "Basic"
@@ -230,18 +230,18 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-az801-bastion')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-hq-az801-bastion-01')]"
               },
               "subnet": {
-                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-src-az801'), '2019-11-01').subnets[1].id]"
+                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-hq-az801-01'), '2019-11-01').subnets[1].id]"
               }
             }
           }
         ]
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-az801-bastion')]",
-        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-src-az801')]"
+        "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-hq-az801-bastion-01')]",
+        "[resourceId('Microsoft.Network/virtualNetworks', 'vnet-hq-az801-01')]"
       ]
     }
   ]
