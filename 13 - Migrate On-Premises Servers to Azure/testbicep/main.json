@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "13632780453017676820"
+      "templateHash": "17153135436172364988"
     }
   },
   "parameters": {
@@ -22,7 +22,7 @@
   "resources": [
     {
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2019-11-01",
+      "apiVersion": "2021-05-01",
       "name": "vnet-hq-az801-01",
       "location": "[variables('location')]",
       "properties": {
@@ -55,7 +55,7 @@
     },
     {
       "type": "Microsoft.Network/virtualNetworks",
-      "apiVersion": "2019-11-01",
+      "apiVersion": "2021-05-01",
       "name": "vnet-azure-az801-01",
       "location": "[variables('location')]",
       "properties": {
@@ -76,7 +76,7 @@
     },
     {
       "type": "Microsoft.Network/networkSecurityGroups",
-      "apiVersion": "2019-11-01",
+      "apiVersion": "2022-07-01",
       "name": "nsg-hq-az801-01",
       "location": "[variables('location')]",
       "properties": {
@@ -100,7 +100,7 @@
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2019-11-01",
+      "apiVersion": "2022-05-01",
       "name": "pip-hq-az801-01",
       "location": "[variables('location')]",
       "sku": {
@@ -112,7 +112,7 @@
     },
     {
       "type": "Microsoft.Network/networkInterfaces",
-      "apiVersion": "2020-11-01",
+      "apiVersion": "2021-05-01",
       "name": "nic-hq-az801-01",
       "location": "[variables('location')]",
       "properties": {
@@ -126,7 +126,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-hq-az801-01')]"
               },
               "subnet": {
-                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-hq-az801-01'), '2019-11-01').subnets[0].id]"
+                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-hq-az801-01'), '2021-05-01').subnets[0].id]"
               }
             }
           }
@@ -139,7 +139,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2020-12-01",
+      "apiVersion": "2021-11-01",
       "name": "vm-hq-az801-01",
       "location": "[variables('location')]",
       "properties": {
@@ -183,7 +183,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "apiVersion": "2020-12-01",
+      "apiVersion": "2022-11-01",
       "name": "[format('{0}/{1}', 'vm-hq-az801-01', 'cse-vm-hq-az801-01')]",
       "location": "[variables('location')]",
       "properties": {
@@ -204,7 +204,7 @@
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2022-01-01",
+      "apiVersion": "2022-05-01",
       "name": "pip-hq-az801-bastion-01",
       "location": "[variables('location')]",
       "sku": {
@@ -232,7 +232,7 @@
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-hq-az801-bastion-01')]"
               },
               "subnet": {
-                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-hq-az801-01'), '2019-11-01').subnets[1].id]"
+                "id": "[reference(resourceId('Microsoft.Network/virtualNetworks', 'vnet-hq-az801-01'), '2021-05-01').subnets[1].id]"
               }
             }
           }

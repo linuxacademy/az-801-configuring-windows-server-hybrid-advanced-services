@@ -5,7 +5,7 @@ param vmPassword string
 
 var location = resourceGroup().location
 
-resource src_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
+resource src_vnet_az801 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: 'vnet-hq-az801-01'
   location: location
   properties: {
@@ -35,7 +35,7 @@ resource src_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 }
 
 // Destination VNet for Azure Migrated VM
-resource dest_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
+resource dest_vnet_az801 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   name: 'vnet-azure-az801-01'
   location: location
   properties: {
@@ -56,7 +56,7 @@ resource dest_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 }
 
 
-resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2019-11-01' = {
+resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2022-07-01' = {
   name: 'nsg-hq-az801-01'
   location: location
   properties: {
@@ -79,7 +79,7 @@ resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2019-11-01' = {
   }
 }
 
-resource pip_az801 'Microsoft.Network/publicIPAddresses@2019-11-01' = {
+resource pip_az801 'Microsoft.Network/publicIPAddresses@2022-05-01' = {
   name: 'pip-hq-az801-01'
   location: location
   sku: {
@@ -90,7 +90,7 @@ resource pip_az801 'Microsoft.Network/publicIPAddresses@2019-11-01' = {
   }
 }
 
-resource nic_az801 'Microsoft.Network/networkInterfaces@2020-11-01' = {
+resource nic_az801 'Microsoft.Network/networkInterfaces@2021-05-01' = {
   name: 'nic-hq-az801-01'
   location: location
   properties: {
@@ -112,7 +112,7 @@ resource nic_az801 'Microsoft.Network/networkInterfaces@2020-11-01' = {
   }
 }
 
-resource vm_az801 'Microsoft.Compute/virtualMachines@2020-12-01' = {
+resource vm_az801 'Microsoft.Compute/virtualMachines@2021-11-01' = {
   name: 'vm-hq-az801-01'
   location: location
   properties: {
@@ -152,7 +152,7 @@ resource vm_az801 'Microsoft.Compute/virtualMachines@2020-12-01' = {
   }
 }
 
-resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' = {
+resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2022-11-01' = {
   parent: vm_az801
   name: 'cse-vm-hq-az801-01'
   location: location
@@ -170,7 +170,7 @@ resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' 
   }
 }
 
-resource public_ip_az801_bastion 'Microsoft.Network/publicIPAddresses@2022-01-01' = {
+resource public_ip_az801_bastion 'Microsoft.Network/publicIPAddresses@2022-05-01' = {
   name: 'pip-hq-az801-bastion-01'
   location: location
   sku: {
