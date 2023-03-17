@@ -6,7 +6,7 @@ param vmPassword string
 var location = resourceGroup().location
 
 resource src_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
-  name: 'vnet-src-az801'
+  name: 'vnet-hq-az801-01'
   location: location
   properties: {
     addressSpace: {
@@ -36,7 +36,7 @@ resource src_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 
 // Destination VNet for Azure Migrated VM
 resource dest_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
-  name: 'vnet-dest-az801'
+  name: 'vnet-azure-az801-01'
   location: location
   properties: {
     addressSpace: {
@@ -57,7 +57,7 @@ resource dest_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 
 
 resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2019-11-01' = {
-  name: 'nsg-az801'
+  name: 'nsg-hq-az801-01'
   location: location
   properties: {
     securityRules: [
@@ -80,7 +80,7 @@ resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2019-11-01' = {
 }
 
 resource pip_az801 'Microsoft.Network/publicIPAddresses@2019-11-01' = {
-  name: 'pip-az801'
+  name: 'pip-hq-az801-01'
   location: location
   sku: {
     name: 'Standard'
@@ -91,12 +91,12 @@ resource pip_az801 'Microsoft.Network/publicIPAddresses@2019-11-01' = {
 }
 
 resource nic_az801 'Microsoft.Network/networkInterfaces@2020-11-01' = {
-  name: 'nic-az801'
+  name: 'nic-hq-az801-01'
   location: location
   properties: {
     ipConfigurations: [
       {
-        name: 'nic-az801-IPConfig1'
+        name: 'IPConfig1'
         properties: {
           privateIPAllocationMethod: 'Static'
           privateIPAddress: '10.0.0.5'
@@ -113,14 +113,14 @@ resource nic_az801 'Microsoft.Network/networkInterfaces@2020-11-01' = {
 }
 
 resource vm_az801 'Microsoft.Compute/virtualMachines@2020-12-01' = {
-  name: 'vm-az801'
+  name: 'vm-hq-az801-01'
   location: location
   properties: {
     hardwareProfile: {
       vmSize: 'standard_d2s_v3'
     }
     osProfile: {
-      computerName: 'vm-az801'
+      computerName: 'vm-hq-az801-01'
       adminUsername: vmUserName
       adminPassword: vmPassword
     }
@@ -132,7 +132,7 @@ resource vm_az801 'Microsoft.Compute/virtualMachines@2020-12-01' = {
         version: 'latest'
       }
       osDisk: {
-        name: 'vm-az801-OSDisk'
+        name: 'vm-hq-az801-OSDisk'
         caching: 'ReadWrite'
         createOption: 'FromImage'
       }
@@ -154,7 +154,7 @@ resource vm_az801 'Microsoft.Compute/virtualMachines@2020-12-01' = {
 
 resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' = {
   parent: vm_az801
-  name: 'cse-vm-az801'
+  name: 'cse-vm-hq-az801-01'
   location: location
   properties: {
     publisher: 'Microsoft.Compute'
@@ -171,7 +171,7 @@ resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' 
 }
 
 resource public_ip_az801_bastion 'Microsoft.Network/publicIPAddresses@2020-11-01' = {
-  name: 'pip-az801-bastion'
+  name: 'pip-hq-az801-bastion-01'
   location: location
   sku: {
       name: 'Standard'
@@ -184,7 +184,7 @@ resource public_ip_az801_bastion 'Microsoft.Network/publicIPAddresses@2020-11-01
 
 // Create the Azure Bastion resource
 resource bastion 'Microsoft.Network/bastionHosts@2020-11-01' = {
-  name: 'b59-bastion'
+  name: 'bastion-hq-az801-01'
   location: location
   sku: {
       name: 'Basic'
