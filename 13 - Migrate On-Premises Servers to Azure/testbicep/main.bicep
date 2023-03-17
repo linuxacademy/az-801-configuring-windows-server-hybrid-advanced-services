@@ -170,7 +170,7 @@ resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2020-12-01' 
   }
 }
 
-resource public_ip_az801_bastion 'Microsoft.Network/publicIPAddresses@2020-11-01' = {
+resource public_ip_az801_bastion 'Microsoft.Network/publicIPAddresses@2022-01-01' = {
   name: 'pip-hq-az801-bastion-01'
   location: location
   sku: {
@@ -183,7 +183,7 @@ resource public_ip_az801_bastion 'Microsoft.Network/publicIPAddresses@2020-11-01
 }
 
 // Create the Azure Bastion resource
-resource bastion 'Microsoft.Network/bastionHosts@2020-11-01' = {
+resource bastion 'Microsoft.Network/bastionHosts@2022-01-01' = {
   name: 'bastion-hq-az801-01'
   location: location
   sku: {
@@ -194,7 +194,6 @@ resource bastion 'Microsoft.Network/bastionHosts@2020-11-01' = {
           {
               name: 'IpConf'
               properties: {
-                  privateIPAllocationMethod: 'Dynamic'
                   publicIPAddress: {
                       id: public_ip_az801_bastion.id
                   }

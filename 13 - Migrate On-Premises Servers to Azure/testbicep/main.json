@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "10512072438442041757"
+      "templateHash": "13632780453017676820"
     }
   },
   "parameters": {
@@ -204,7 +204,7 @@
     },
     {
       "type": "Microsoft.Network/publicIPAddresses",
-      "apiVersion": "2020-11-01",
+      "apiVersion": "2022-01-01",
       "name": "pip-hq-az801-bastion-01",
       "location": "[variables('location')]",
       "sku": {
@@ -217,7 +217,7 @@
     },
     {
       "type": "Microsoft.Network/bastionHosts",
-      "apiVersion": "2020-11-01",
+      "apiVersion": "2022-01-01",
       "name": "bastion-hq-az801-01",
       "location": "[variables('location')]",
       "sku": {
@@ -228,7 +228,6 @@
           {
             "name": "IpConf",
             "properties": {
-              "privateIPAllocationMethod": "Dynamic",
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'pip-hq-az801-bastion-01')]"
               },
