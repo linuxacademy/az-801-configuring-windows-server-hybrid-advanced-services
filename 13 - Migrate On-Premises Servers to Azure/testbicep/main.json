@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "11701082685720427486"
+      "templateHash": "10512072438442041757"
     }
   },
   "parameters": {
@@ -144,7 +144,7 @@
       "location": "[variables('location')]",
       "properties": {
         "hardwareProfile": {
-          "vmSize": "standard_d2s_v3"
+          "vmSize": "standard_d8s_v3"
         },
         "osProfile": {
           "computerName": "vm-hq-az801-01",
