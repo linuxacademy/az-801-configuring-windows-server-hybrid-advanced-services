@@ -5,11 +5,8 @@ param vmPassword string
 
 var location = resourceGroup().location
 
-// var customImageDefinitionName = 'Win2022_Eval_VHD'
-// var customImageResourceId = resourceId('07089ab1-6f34-49b2-9cad-f1a654494a69', 'LACustomImagesRG', 'Microsoft.Compute/galleries/images/versions', 'LAImagesGallery', customImageDefinitionName, 'latest')
-
-resource vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
-  name: 'vnet-az801'
+resource src_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
+  name: 'vnet-src-az801'
   location: location
   properties: {
     addressSpace: {
@@ -19,7 +16,7 @@ resource vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
     }
     subnets: [
       {
-        name: 'server-subnet'
+        name: 'SharedServicesSubnet'
         properties: {
           addressPrefix: '10.0.0.0/24'
           networkSecurityGroup: {
@@ -36,6 +33,28 @@ resource vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
     ]
   }
 }
+
+// Destination VNet for Azure Migrated VM
+resource dest_vnet_az801 'Microsoft.Network/virtualNetworks@2019-11-01' = {
+  name: 'vnet-dest-az801'
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        '10.1.0.0/16'
+      ]
+    }
+    subnets: [
+      {
+        name: 'SharedServicesSubnet'
+        properties: {
+          addressPrefix: '10.1.0.0/24'
+        }
+      }
+    ]
+  }
+}
+
 
 resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2019-11-01' = {
   name: 'nsg-az801'
@@ -85,7 +104,7 @@ resource nic_az801 'Microsoft.Network/networkInterfaces@2020-11-01' = {
             id: pip_az801.id
           }
           subnet: {
-            id: vnet_az801.properties.subnets[0].id
+            id: src_vnet_az801.properties.subnets[0].id
           }
         }
       }
@@ -180,7 +199,7 @@ resource bastion 'Microsoft.Network/bastionHosts@2020-11-01' = {
                       id: public_ip_az801_bastion.id
                   }
                   subnet: {
-                      id: vnet_az801.properties.subnets[1].id
+                      id: src_vnet_az801.properties.subnets[1].id
                   }
               }
           }
