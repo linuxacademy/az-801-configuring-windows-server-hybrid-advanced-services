@@ -51,7 +51,7 @@ catch {
 # Compress published solution into deploy.zip
 try {
     Write-Log -Entry "Compress publish solution - Processing..."
-    cd C:\Temp\TestWebApp\bin\Release\net7.0\publish0
+    cd C:\Temp\TestWebApp\bin\Release\net7.0\publish
     Compress-Archive -Path * -DestinationPath deploy.zip
     Write-Log -Entry "Compress publish solution - Success"
 }
