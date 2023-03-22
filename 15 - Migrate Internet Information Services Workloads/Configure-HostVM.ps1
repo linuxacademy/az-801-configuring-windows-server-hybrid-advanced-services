@@ -103,7 +103,7 @@ catch {
 # Install the necessary components on the server
 try {
     Write-Log -Entry "Installing IIS - Processing..."
-    Install-WindowsFeature -Name 'Web-Server' -IncludeManagementTools -IncludeAllSubFeature -Force
+    Install-WindowsFeature -Name 'Web-Server' -IncludeManagementTools -IncludeAllSubFeature -Restart
     Write-Log -Entry "Installing IIS - Success"
 }
 catch {
