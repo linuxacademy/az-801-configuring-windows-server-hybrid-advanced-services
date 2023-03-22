@@ -1,5 +1,5 @@
 # Install the necessary components on the server
-Install-WindowsFeature -Name 'Web-Server' -IncludeManagementTools -IncludeAllSubFeature
+Install-WindowsFeature -Name 'Web-Server' -IncludeManagementTools -IncludeAllSubFeature -Force
 
 # Install web host bundle
 Invoke-WebRequest -Uri 'https://download.visualstudio.microsoft.com/download/pr/d97e0776-b316-4c41-a067-202eb027b968/e9694b0aa94e4b814f980f9ec3d3f400/dotnet-hosting-7.0.4-win.exe' -OutFile 'C:\temp\dotnet-hosting.exe'

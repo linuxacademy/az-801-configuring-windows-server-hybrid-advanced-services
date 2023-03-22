@@ -53,24 +53,11 @@ catch {
     Write-Log $_
 }
 
-# # Download HyperV VM Creation Scripts
-# try {
-#     Write-Log -Entry "Download HyperV VM creation script - Processing..."
-#     New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
-#     Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
-#     Write-Log -Entry "Download HyperV VM creation script - Success"
-# }
-# catch {
-#     Write-Log -Entry "Download HyperV VM creation script - Failure"
-#     Write-Log $_
-# }
-
-# Download the Configure-IIS.ps1 script from the course repo
-#Download HyperV VM Creation Scripts
+# Download IIS Configuration Script
 try {
     Write-Log -Entry "Download IIS configuration script - Processing..."
     New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/15%20-%20Migrate%20Internet%20Information%20Services%20Workloads/Configure-IIS.ps1' -OutFile 'C:\temp\Configure-IIS.ps1'
     Write-Log -Entry "Download IIS configuration script - Success"
 }
 catch {
@@ -78,132 +65,37 @@ catch {
     Write-Log $_
 }
 
-# # Download the 2019 Windows Server Datacenter Eval edition
-# $VHDLink = 'https://go.microsoft.com/fwlink/p/?linkid=2195334&clcid=0x409&culture=en-us&country=us'
-# $ParentVHDPath = 'C:\Users\Public\Documents\win-2019-64.vhd'
-# try {
-#     Write-Log -Entry "Download VHD - $VHDLink - Processing..."
-#     Invoke-WebRequest -Uri $VHDLink -OutFile $ParentVHDPath
-#     Write-Log -Entry "Download VHD - $VHDLink - Success"
-# }
-# catch {
-#     Write-Log -Entry "Download VHD - $VHDLink - Failed"
-#     Write-Log -Entry "$_"
-#     Exit
-# }
-
-# # Download the Azure Migrate Appliance VHD
-# $AzMigAppUrl = 'https://go.microsoft.com/fwlink/?linkid=2191848'
-# $AzMigAppFilePath = "$($AllUsersDesktop)\azMigApp.zip"
-# try {
-#     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Processing..."
-#     Invoke-WebRequest -Uri $AzMigAppUrl -OutFile $AzMigAppFilePath
-#     # Unzip download to public desktop
-#     Expand-Archive -LiteralPath $AzMigAppFilePath -DestinationPath $AllUsersDesktop
-#     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Success"
-# }
-# catch {
-#     Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Failed"
-#     Write-Log -Entry "$_"
-#     Exit
-# }
-
-# # Download Azure Site Recovery Provider .exe
-# $AzSiteRecoveryExeUrl = 'https://aka.ms/downloaddra_eus'
-# $AzSiteRecoveryExeFilePath = "$($AllUsersDesktop)\AzureSiteRecoveryProvider.exe"
-# try {
-#     Write-Log -Entry "Download Azure Site Recovery for Replication - Processsing..."
-#     Invoke-WebRequest -Uri $AzSiteRecoveryExeUrl -OutFile $AzSiteRecoveryExeFilePath
-#     Write-Log -Entry "Download Azure Site Recovery for Replication - Success"
-# }
-# catch {
-#     Write-Log -Entry "Download Azure Site Recovery for Replication - Failed"
-#     Write-Log -Entry "$_"
-#     Exit
-# }
-
-# # Download Az Migrate Appliance PowerShell Config Script
-# $AzMigAppConfPwshUrl = 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Configure-AzMigrateAppliance.ps1'
-# $AzMigAppConfPwshPath = "$($AllUsersDesktop)\Configure-AzMigrateAppliance.ps1"
-# try {
-#     Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Processing..."
-#     Invoke-WebRequest -Uri $AzMigAppConfPwshUrl -OutFile $AzMigAppConfPwshPath
-#     Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Success"
-# }
-# catch {
-#     Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Failed"
-#     Write-Log -Entry "$_"
-#     Exit
-# }
-
-# # VM Scheduled Task Creation Loop
-# try {
-#     Write-Log -Entry "Creating loop - Processing..."
-#     $VMs = @('nestedVM1')
-#     foreach ($VM in $VMs) {
-#         try {
-#             Write-Log -Entry "Scheduled task creation for $VM - Processing..."
-#             # Create scheduled task action
-#             $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Create-VM.ps1 -UserName $($UserName) -Password $($Password) -VM $($VM) -ParentVHDPath $($ParentVHDPath)"
-#             Write-Log -Entry "Scheduled task creation for $VM - Success"
-#         }
-#         catch {
-#             Write-Log -Entry "Scheduled task creation for $VM - Failure"
-#             Write-Log -Entry $_
-#             Exit
-#         }
-#         try {
-#             # Create scheduled task trigger
-#             Write-Log -Entry "Schedule task trigger for $VM - Processing..."
-#             $Trigger = New-ScheduledTaskTrigger -AtStartup
-#             $Trigger.Delay = 'PT15S'
-#             Write-Log -Entry "Schedule task trigger for $VM - Success"
-#         }
-#         catch {
-#             Write-Log -Entry "Scheduled task creation for $VM - Failure"
-#             Write-Log -Entry $_
-#             Exit
-#         }
-#         try {
-#             Write-Log -Entry "Scheduled task registration for $VM - Processing..."
-#             Register-ScheduledTask -TaskName "Create-VM $($VM)" -Action $Action -Trigger $Trigger -Description "Create VM" -RunLevel Highest -User "System"
-#             Write-Log -Entry "Scheduled task registration for $VM - Success"
-#         }
-#         catch {
-#             Write-Log -Entry "Scheduled task registration for $VM - Failure"
-#             Write-Log -Entry $_
-#             Exit
-#         }
-#     }
-#     Write-Log -Entry "Creating loop - Success"
-# }
-# catch {
-#     Write-Log -Entry "Creating loop - Failure"
-#     Write-Log $_
-#     Exit
-# }
-
-# # Install Hyper-V
-# try {
-#     Write-Log -Entry "Install Hyper-V - Processing..."
-#     Install-WindowsFeature -Name Hyper-V -IncludeAllSubFeature -IncludeManagementTools
-#     # Add-WindowsFeature Hyper-V -IncludeManagementTools
-#     Write-Log -Entry "Install Hyper-V - Success"
-# }
-# catch {
-#     Write-Log -Entry "Install Hyper-V - Failure"
-#     Write-Log $_
-#     Exit
-# }
-
-# #Restart the Server
-# try {
-#     Write-Log -Entry "Restart server - Processing..."
-#     Restart-Computer -Force
-#     Write-Log -Entry "Restart server - Success"   
-# }
-# catch {
-#     Write-Log -Entry "Restart server - Failure"
-#     Write-Log -Entry $_
-#     Exit
-# }
+# Setup scheduled task action to run IIS configuration script
+try {
+    Write-Log -Entry "Create IIS configure task action - Processing..."
+    # Create scheduled task action
+    $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Configure-IIS.ps1"
+    Write-Log -Entry "Create IIS configure task action - Success"
+}
+catch {
+    Write-Log -Entry "Create IIS configure task action - Failure"
+    Write-Log -Entry $_
+    Exit
+}
+try {
+    # Create scheduled task trigger
+    Write-Log -Entry "Create IIS configure task trigger - Processing..."
+    $Trigger = New-ScheduledTaskTrigger -AtStartup
+    $Trigger.Delay = 'PT15S'
+    Write-Log -Entry "Create IIS configure task trigger - Success"
+}
+catch {
+    Write-Log -Entry "Create IIS configure task trigger - Failure"
+    Write-Log -Entry $_
+    Exit
+}
+try {
+    Write-Log -Entry "Create IIS configure task registration - Processing..."
+    Register-ScheduledTask -TaskName "Configure IIS" -Action $Action -Trigger $Trigger -Description "Configure IIS" -RunLevel Highest -User "System"
+    Write-Log -Entry "Create IIS configure task registration - Success"
+}
+catch {
+    Write-Log -Entry "Create IIS configure task registration - Failure"
+    Write-Log -Entry $_
+    Exit
+}
