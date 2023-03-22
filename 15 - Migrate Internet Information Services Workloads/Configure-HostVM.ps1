@@ -69,7 +69,7 @@ catch {
 try {
     Write-Log -Entry "Create IIS configure task action - Processing..."
     # Create scheduled task action
-    $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Configure-IIS.ps1"
+    $Action = New-ScheduledTaskAction -Execute "PowerShell.exe" -Argument "-ExecutionPolicy Bypass -File C:\Temp\Configure-IIS.ps1 -HostVMName $($HostVMName)"
     Write-Log -Entry "Create IIS configure task action - Success"
 }
 catch {
@@ -96,6 +96,30 @@ try {
 }
 catch {
     Write-Log -Entry "Create IIS configure task registration - Failure"
+    Write-Log -Entry $_
+    Exit
+}
+
+# Install the necessary components on the server
+try {
+    Write-Log -Entry "Installing IIS - Processing..."
+    Install-WindowsFeature -Name 'Web-Server' -IncludeManagementTools -IncludeAllSubFeature -Force
+    Write-Log -Entry "Installing IIS - Success"
+}
+catch {
+    Write-Log -Entry "Installing IIS - Failed"
+    Write-Log -Entry "$_"
+    Exit
+}
+
+#Restart the Server
+try {
+    Write-Log -Entry "Restart server - Processing..."
+    Restart-Computer -Force
+    Write-Log -Entry "Restart server - Success"   
+}
+catch {
+    Write-Log -Entry "Restart server - Failure"
     Write-Log -Entry $_
     Exit
 }
