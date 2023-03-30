@@ -14,6 +14,8 @@ function Write-Log ($Entry, $Path = $LogFile) {
     Add-Content -Path $LogFile -Value "$((Get-Date).ToShortDateString()) $((Get-Date).ToShortTimeString()): $($Entry)" 
 }
 
+Write-Log -Entry "Script Run - Started"
+
 # Install web host bundle
 try {
     Write-Log -Entry "Install dotnet webhost bundle - Processing..."
@@ -26,6 +28,7 @@ try {
 catch {
     Write-Log -Entry "Install dotnet webhost bundle - Failed"
     Write-Log -Entry "$_"
+    Exit
 }
 
 # Create a new ASP.NET MVC Web App
@@ -37,6 +40,7 @@ try {
 catch {
     Write-Log -Entry "Create new ASP.NET Core MVC Web App - Failed"
     Write-Log -Entry "$_"
+    Exit
 }
 
 # Publish ASP.NET MVC Web App
@@ -48,6 +52,7 @@ try {
 catch {
     Write-Log -Entry "Publish new ASP.Net Core MVC Web App - Failed"
     Write-Log -Entry "$_"
+    Exit
 }
 
 # Compress published solution into deploy.zip
@@ -60,6 +65,7 @@ try {
 catch {
     Write-Log -Entry "Compress publish solution - Failed"
     Write-Log -Entry "$_"
+    Exit
 }
 
 # Expand deploy.zip into deafult IIS directory
@@ -71,4 +77,7 @@ try {
 catch {
     Write-Log -Entry "Expanding web app into default IIS directory - Failed"
     Write-Log -Entry "$_"
+    Exit
 }
+
+Write-Log -Entry "Script Run - Completed"
