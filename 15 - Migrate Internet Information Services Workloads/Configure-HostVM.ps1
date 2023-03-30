@@ -65,6 +65,18 @@ catch {
     Write-Log $_
 }
 
+# Download Modified Azure Migration Containerization App Powershell script
+try {
+    Write-Log -Entry "Download custom containerization script - Processing..."
+    New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/15%20-%20Migrate%20Internet%20Information%20Services%20Workloads/Configure-IIS.ps1' -OutFile 'C:\temp\Configure-IIS.ps1'
+    Write-Log -Entry "Download custom containerization script - Success"
+}
+catch {
+    Write-Log -Entry "Download custom containerization script - Failure"
+    Write-Log $_
+}
+
 # Setup scheduled task action to run IIS configuration script
 try {
     Write-Log -Entry "Create IIS configure task action - Processing..."
