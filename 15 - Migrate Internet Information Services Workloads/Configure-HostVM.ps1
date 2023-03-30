@@ -69,7 +69,7 @@ catch {
 try {
     Write-Log -Entry "Download custom containerization script - Processing..."
     New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/15%20-%20Migrate%20Internet%20Information%20Services%20Workloads/Configure-IIS.ps1' -OutFile 'C:\temp\Configure-IIS.ps1'
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/15%20-%20Migrate%20Internet%20Information%20Services%20Workloads/AppContainerizationInstaller.ps1' -OutFile 'C:\Users\azureuser\Desktop\AppContainerizationInstaller.ps1'
     Write-Log -Entry "Download custom containerization script - Success"
 }
 catch {
