@@ -132,7 +132,7 @@ function EnableIIS
     $OS = Get-WmiObject Win32_OperatingSystem
     if ($OS.Caption.contains("Server"))
     {
-        Install-WindowsFeature Powershell, WAS, WAS-Process-Model, WAS-Config-APIs, Web-Server, `
+        Install-WindowsFeature PowerShell, WAS, WAS-Process-Model, WAS-Config-APIs, Web-Server, `
         Web-WebServer, Web-Mgmt-Service, Web-Request-Monitor, Web-Common-Http, Web-Static-Content, `
         Web-Default-Doc, Web-Dir-Browsing, Web-Http-Errors, Web-App-Dev, Web-CGI, Web-Health, `
         Web-Http-Logging, Web-Log-Libraries, Web-Security, Web-Filtering, Web-Performance, `
@@ -285,7 +285,7 @@ try
     StartIISServices
 
     Log-Info "Installation completed successfully. Launching Azure Migrate App Containerization..."
-    Start $DefaultURL
+    Start $DefaultURL
 }
 catch
 {
