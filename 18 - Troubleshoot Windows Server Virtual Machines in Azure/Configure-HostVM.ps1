@@ -57,7 +57,7 @@ catch {
 try {
     Write-Log -Entry "Download HyperV VM creation script - Processing..."
     New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
     Write-Log -Entry "Download HyperV VM creation script - Success"
 }
 catch {
@@ -76,50 +76,6 @@ try {
 }
 catch {
     Write-Log -Entry "Download VHD - $VHDLink - Failed"
-    Write-Log -Entry "$_"
-    Exit
-}
-
-# Download the Azure Migrate Appliance VHD
-$AzMigAppUrl = 'https://go.microsoft.com/fwlink/?linkid=2191848'
-$AzMigAppFilePath = "$($AllUsersDesktop)\azMigApp.zip"
-try {
-    Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Processing..."
-    Invoke-WebRequest -Uri $AzMigAppUrl -OutFile $AzMigAppFilePath
-    # Unzip download to public desktop
-    Expand-Archive -LiteralPath $AzMigAppFilePath -DestinationPath $AllUsersDesktop
-    Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Success"
-}
-catch {
-    Write-Log -Entry "Download AzMigrate Appliance VHD - $AzMigAppUrl - Failed"
-    Write-Log -Entry "$_"
-    Exit
-}
-
-# Download Azure Site Recovery Provider .exe
-$AzSiteRecoveryExeUrl = 'https://aka.ms/downloaddra_eus'
-$AzSiteRecoveryExeFilePath = "$($AllUsersDesktop)\AzureSiteRecoveryProvider.exe"
-try {
-    Write-Log -Entry "Download Azure Site Recovery for Replication - Processsing..."
-    Invoke-WebRequest -Uri $AzSiteRecoveryExeUrl -OutFile $AzSiteRecoveryExeFilePath
-    Write-Log -Entry "Download Azure Site Recovery for Replication - Success"
-}
-catch {
-    Write-Log -Entry "Download Azure Site Recovery for Replication - Failed"
-    Write-Log -Entry "$_"
-    Exit
-}
-
-# Download Az Migrate Appliance PowerShell Config Script
-$AzMigAppConfPwshUrl = 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Configure-AzMigrateAppliance.ps1'
-$AzMigAppConfPwshPath = "$($AllUsersDesktop)\Configure-AzMigrateAppliance.ps1"
-try {
-    Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Processing..."
-    Invoke-WebRequest -Uri $AzMigAppConfPwshUrl -OutFile $AzMigAppConfPwshPath
-    Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Success"
-}
-catch {
-    Write-Log -Entry "Download Az Migrate Appliance PowerShell Config Script - Failed"
     Write-Log -Entry "$_"
     Exit
 }
