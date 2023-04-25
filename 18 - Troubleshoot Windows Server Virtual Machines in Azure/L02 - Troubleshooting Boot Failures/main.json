@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "14747790321549104670"
+      "templateHash": "17482550276568746258"
     }
   },
   "parameters": {
@@ -123,7 +123,7 @@
       "location": "[variables('location')]",
       "properties": {
         "hardwareProfile": {
-          "vmSize": "standard_d8s_v3"
+          "vmSize": "standard_d2s_v3"
         },
         "osProfile": {
           "computerName": "vm-hq-az801-01",
@@ -172,7 +172,7 @@
         "autoUpgradeMinorVersion": true,
         "protectedSettings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L01%20-%20Troubleshooting%20Deployment%20Failures/Configure-HostVM.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L02%20-%20Troubleshooting%20Boot%20Failures/Configure-HostVM.ps1"
           ],
           "commandToExecute": "[format('powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName \"{0}\" -Password \"{1}\" -HostVMName \"{2}\"', parameters('vmUserName'), parameters('vmPassword'), 'vm-hq-az801-01')]"
         }
