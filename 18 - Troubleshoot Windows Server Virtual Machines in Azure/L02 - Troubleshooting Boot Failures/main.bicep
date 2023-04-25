@@ -34,28 +34,6 @@ resource src_vnet_az801 'Microsoft.Network/virtualNetworks@2021-05-01' = {
   }
 }
 
-// Destination VNet for Azure Migrated VM
-resource dest_vnet_az801 'Microsoft.Network/virtualNetworks@2021-05-01' = {
-  name: 'vnet-azure-az801-01'
-  location: location
-  properties: {
-    addressSpace: {
-      addressPrefixes: [
-        '10.1.0.0/16'
-      ]
-    }
-    subnets: [
-      {
-        name: 'SharedServicesSubnet'
-        properties: {
-          addressPrefix: '10.1.0.0/24'
-        }
-      }
-    ]
-  }
-}
-
-
 resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2022-07-01' = {
   name: 'nsg-hq-az801-01'
   location: location
@@ -163,7 +141,7 @@ resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2022-11-01' 
     autoUpgradeMinorVersion: true
     protectedSettings: {
       fileUris: [
-        'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/13%20-%20Migrate%20On-Premises%20Servers%20to%20Azure/testbicep/Configure-HostVM.ps1'
+        'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L01%20-%20Troubleshooting%20Deployment%20Failures/Configure-HostVM.ps1'
       ]
       commandToExecute: 'powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName "${vmUserName}" -Password "${vmPassword}" -HostVMName "${vm_az801.name}"'
     }
