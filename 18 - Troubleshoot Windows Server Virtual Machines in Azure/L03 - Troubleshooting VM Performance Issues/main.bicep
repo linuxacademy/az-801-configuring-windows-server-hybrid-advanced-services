@@ -141,7 +141,7 @@ resource vm_az801_CSE 'Microsoft.Compute/virtualMachines/extensions@2022-11-01' 
     autoUpgradeMinorVersion: true
     protectedSettings: {
       fileUris: [
-        'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L02%20-%20Troubleshooting%20Boot%20Failures/Configure-HostVM.ps1'
+        'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L03%20-%20Troubleshooting%20VM%20Performance%20Issues/Configure-HostVM.ps1'
       ]
       commandToExecute: 'powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName "${vmUserName}" -Password "${vmPassword}" -HostVMName "${vm_az801.name}"'
     }

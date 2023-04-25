@@ -92,7 +92,7 @@ try {
     Write-Log -Entry "Download Answer File Start"
     New-Item -Path "C:\Temp\$($VM)" -ItemType Directory -ErrorAction SilentlyContinue
     $AnswerFilePath = "C:\Temp\$($VM)\unattend.xml"
-    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L02%20-%20Troubleshooting%20Boot%20Failures/unattend.xml" -OutFile $AnswerFilePath
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L03%20-%20Troubleshooting%20VM%20Performance%20Issues/unattend.xml" -OutFile $AnswerFilePath
     Write-Log -Entry "Download Answer File Success"
 }
 catch {
