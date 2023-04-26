@@ -57,7 +57,7 @@ catch {
 try {
     Write-Log -Entry "Download HyperV VM creation script - Processing..."
     New-Item -Path C:\Temp -ItemType Directory -ErrorAction SilentlyContinue
-    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L06%20-%20Troubleshooting%20Storage/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
+    Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L07%20-%20Troubleshooting%20VM%20Connnection%20Issues/Create-VM.ps1' -OutFile 'C:\temp\Create-VM.ps1'
     Write-Log -Entry "Download HyperV VM creation script - Success"
 }
 catch {
