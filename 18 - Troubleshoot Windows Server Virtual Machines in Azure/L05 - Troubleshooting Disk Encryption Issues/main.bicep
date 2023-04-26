@@ -114,6 +114,15 @@ resource vm_az801 'Microsoft.Compute/virtualMachines@2021-11-01' = {
         caching: 'ReadWrite'
         createOption: 'FromImage'
       }
+      dataDisks: [
+        {
+          name: 'vm-hq-az801-DataDisk'
+          diskSizeGB: 128
+          lun: 0
+          createOption: 'Empty'
+          caching: 'None'
+        }
+      ]
     }
     networkProfile: {
       networkInterfaces: [

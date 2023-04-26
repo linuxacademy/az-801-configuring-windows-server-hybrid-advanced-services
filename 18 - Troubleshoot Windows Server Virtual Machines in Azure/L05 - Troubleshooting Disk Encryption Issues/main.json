@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "9239813599036084594"
+      "templateHash": "2418729268276065493"
     }
   },
   "parameters": {
@@ -141,7 +141,16 @@
             "name": "vm-hq-az801-OSDisk",
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          }
+          },
+          "dataDisks": [
+            {
+              "name": "vm-hq-az801-DataDisk",
+              "diskSizeGB": 128,
+              "lun": 0,
+              "createOption": "Empty",
+              "caching": "None"
+            }
+          ]
         },
         "networkProfile": {
           "networkInterfaces": [
