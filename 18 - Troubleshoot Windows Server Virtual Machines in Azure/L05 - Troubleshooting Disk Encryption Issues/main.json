@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "10467657635754082441"
+      "templateHash": "9239813599036084594"
     }
   },
   "parameters": {
@@ -172,7 +172,7 @@
         "autoUpgradeMinorVersion": true,
         "protectedSettings": {
           "fileUris": [
-            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L04%20-%20Troubleshooting%20VM%20Extension%20Issues/Configure-HostVM.ps1"
+            "https://raw.githubusercontent.com/linuxacademy/az-801-configuring-windows-server-hybrid-advanced-services/main/18%20-%20Troubleshoot%20Windows%20Server%20Virtual%20Machines%20in%20Azure/L05%20-%20Troubleshooting%20Disk%20Encryption%20Issues/Configure-HostVM.ps1"
           ],
           "commandToExecute": "[format('powershell.exe -ExecutionPolicy Bypass -File Configure-HostVM.ps1 -UserName \"{0}\" -Password \"{1}\" -HostVMName \"{2}\"', parameters('vmUserName'), parameters('vmPassword'), 'vm-hq-az801-01')]"
         }
