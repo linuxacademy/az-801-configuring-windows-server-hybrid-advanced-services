@@ -40,7 +40,7 @@ resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2022-07-01' = {
   properties: {
     securityRules: [
       {
-        name: 'AllowAnyRDPInbound'
+        name: 'DenyAnyRDPInbound'
         properties: {
           description: 'Allow inbound RDP traffic from all VMs to Internet'
           protocol: 'Tcp'
@@ -48,7 +48,7 @@ resource nsg_az801 'Microsoft.Network/networkSecurityGroups@2022-07-01' = {
           destinationPortRange: '3389'
           sourceAddressPrefix: '*'
           destinationAddressPrefix: 'VirtualNetwork'
-          access: 'Allow'
+          access: 'Deny'
           priority: 100
           direction: 'Inbound'
         }

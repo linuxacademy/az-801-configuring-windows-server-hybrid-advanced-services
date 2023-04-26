@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "1250572194436704790"
+      "templateHash": "4528738447504735855"
     }
   },
   "parameters": {
@@ -61,7 +61,7 @@
       "properties": {
         "securityRules": [
           {
-            "name": "AllowAnyRDPInbound",
+            "name": "DenyAnyRDPInbound",
             "properties": {
               "description": "Allow inbound RDP traffic from all VMs to Internet",
               "protocol": "Tcp",
@@ -69,7 +69,7 @@
               "destinationPortRange": "3389",
               "sourceAddressPrefix": "*",
               "destinationAddressPrefix": "VirtualNetwork",
-              "access": "Allow",
+              "access": "Deny",
               "priority": 100,
               "direction": "Inbound"
             }
