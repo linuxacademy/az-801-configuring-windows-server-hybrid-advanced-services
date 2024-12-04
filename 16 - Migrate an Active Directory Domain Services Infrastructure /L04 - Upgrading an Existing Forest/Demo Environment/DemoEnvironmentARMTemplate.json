@@ -190,8 +190,8 @@
         "storageProfile": {
           "imageReference": {
             "publisher": "MicrosoftWindowsServer",
-            "offer": "WindowsServer",
-            "sku": "2012-r2-datacenter-gensecond",
+            "offer": "windowsserver-gen2preview",
+            "sku": "2012-r2-datacenter-gen2",
             "version": "latest"
           },
           "osDisk": {
